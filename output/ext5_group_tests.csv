@@ -1,0 +1,9 @@
+outcome,group,test,stat,df1,df2,p_value
+has_debt,female,Interaction Wald F,    0.011,   1,    43,   0.9177
+has_debt,female,Chow F,    1.314,   6,   872,   0.2479
+has_debt,larger,Interaction Wald F,    0.080,   1,    43,   0.7788
+has_debt,larger,Chow F,    7.767,   6,   872,   0.0000
+applied_new_bank_loan,female,Interaction Wald F,    2.592,   1,    43,   0.1147
+applied_new_bank_loan,female,Chow F,    0.794,   6,   872,   0.5750
+applied_new_bank_loan,larger,Interaction Wald F,    0.189,   1,    43,   0.6658
+applied_new_bank_loan,larger,Chow F,    5.055,   6,   872,   0.0000

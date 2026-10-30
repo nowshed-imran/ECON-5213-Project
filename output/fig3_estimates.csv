@@ -1,0 +1,9 @@
+outcome,method,b,se,lo,hi,id
+has_debt,lpm,-.093309142,.026985554,-.14620082,-.040417455,Has debt: LPM
+has_debt,probit,-.094044462,.02520144,-.14343928,-.044649638,Has debt: Probit APE
+has_debt,logit,-.094328366,.025502948,-.14431414,-.044342589,Has debt: Logit APE
+has_debt,wls,-.061877914,.026747653,-.11430331,-.0094525134,Has debt: WLS
+applied_new_bank_loan,lpm,-.046486314,.023359697,-.092271321,-.00070130767,Applied: LPM
+applied_new_bank_loan,probit,-.041045632,.024904396,-.089858249,.0077669849,Applied: Probit APE
+applied_new_bank_loan,logit,-.040742565,.026454275,-.092592947,.011107815,Applied: Logit APE
+applied_new_bank_loan,wls,-.037080105,.015237287,-.066945188,-.0072150235,Applied: WLS

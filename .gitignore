@@ -1,0 +1,38 @@
+# raw data is not tracked; data/README.md explains how to rebuild it
+data/*
+!data/README.md
+
+# latex build files
+report/*.aux
+report/*.log
+report/*.out
+report/*.synctex.gz
+report/*.spl
+report/*.bbl
+report/*.blg
+
+# stata, rstudio and system files
+*.smcl
+.Rproj.user/
+.Rhistory
+.RData
+*.Rproj
+.DS_Store
+Thumbs.db
+
+# the journal article is copyrighted and stays local; the report PDF is tracked
+*.pdf
+!report/paaso_replication.pdf
+
+# copyrighted article PDFs stay local; only the list is tracked
+papers/*
+!papers/README.md
+
+# learning and check files that are not part of the submission
+output/*_R.csv
+output/*_R.png
+output/cg_table2a_python.csv
+output/paaso_check.csv
+
+# learning scripts and checks, not part of the submission
+analysis/

@@ -1,0 +1,9 @@
+outcome,test,stat,df1,df2,p_value
+has_debt,Breusch-Pagan F,    1.492,  53,   830,   0.0149
+has_debt,Breusch-Pagan LM,   76.875,  53,,   0.0177
+has_debt,White special F,   29.560,2,   881,   0.0000
+has_debt,White special LM,   55.591,2,,   0.0000
+applied_new_bank_loan,Breusch-Pagan F,    2.922,  53,   830,   0.0000
+applied_new_bank_loan,Breusch-Pagan LM,  139.020,  53,,   0.0000
+applied_new_bank_loan,White special F,   72.035,2,   881,   0.0000
+applied_new_bank_loan,White special LM,  124.243,2,,   0.0000

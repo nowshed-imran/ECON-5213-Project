@@ -1,0 +1,9 @@
+outcome,test,stat,df1,df2,p_value
+has_debt,Linear vs score dummies F,    2.368,9,   821,   0.0121
+has_debt,Linear vs score dummies (clustered Wald F),    1.668,   9,    43,   0.1266
+has_debt,Quadratic term t,   -0.794,1,    43,   0.4317
+has_debt,RESET F,    4.201,   2,   828,   0.0153
+applied_new_bank_loan,Linear vs score dummies F,    1.033,9,   821,   0.4115
+applied_new_bank_loan,Linear vs score dummies (clustered Wald F),    1.376,   9,    43,   0.2290
+applied_new_bank_loan,Quadratic term t,   -0.331,1,    43,   0.7421
+applied_new_bank_loan,RESET F,   15.960,   2,   828,   0.0000
