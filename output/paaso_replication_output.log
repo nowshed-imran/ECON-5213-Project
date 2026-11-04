@@ -2,15 +2,12 @@
       name:  <unnamed>
        log:  ECON-5213-Project\output/paaso_replication_output.log
   log type:  text
- opened on:  30 Oct 2026, 15:13:41
+ opened on:   4 Nov 2026, 17:46:41
 
 . 
 . 
 . /*==============================================================================
 >     0. CHECK THAT THE DATA FILES ARE IN PLACE
->     The two survey files come from the replication package of Paaso,
->     Pursiainen and Torstila (2025), available on the paper's page:
->     https://doi.org/10.1287/mnsc.2022.03007
 > ==============================================================================*/
 . 
 . foreach f in "data/raw/paaso/cleaned_survey.dta" "data/raw/paaso/2023_cleaned_survey.dta" {
@@ -551,7 +548,6 @@ unpaid_wages |         0          0          0          0          0
 . esttab using "output/table1_summary_stats.csv", replace ///
 >     cells("mean(fmt(3)) sd(fmt(3)) p10(fmt(3)) p50(fmt(3)) p90(fmt(3)) count(fmt(0))") ///
 >     noobs nonumber nomtitle label
-(file output/table1_summary_stats.csv not found)
 (output written to output/table1_summary_stats.csv)
 
 . 
@@ -1004,7 +1000,6 @@ Tietojenkäsittely, tieto- j..  |  -.0025688   .1043296    -0.02   0.980    -.21
 >     b(3) se(3) star(* 0.10 ** 0.05 *** 0.01) stats(N r2, fmt(0 3)) ///
 >     mtitles("Has debt" "Has debt" "Has debt" "Has debt" ///
 >             "Had debt 5y" "Had debt 5y" "Had debt 5y" "Had debt 5y") label
-(file output/table3a_debt_use.csv not found)
 (output written to output/table3a_debt_use.csv)
 
 . 
@@ -1415,7 +1410,6 @@ Tietojenkäsittely, tieto- j..  |      .0895   .0533658     1.68   0.101    -.01
 >     keep(high_debt_aversion debt_aversion $controls) ///
 >     b(3) se(3) star(* 0.10 ** 0.05 *** 0.01) stats(N r2, fmt(0 3)) ///
 >     nomtitles label
-(file output/table4_new_bank_loan.csv not found)
 (output written to output/table4_new_bank_loan.csv)
 
 . 
@@ -1556,7 +1550,6 @@ Toiminimi (sisältää pelkäl..)  |   .0105146   .0374661     0.28   0.779    -
 . esttab t10_1 t10_2 t10_3 t10_4 using "output/table10a_2023_sample.csv", replace ///
 >     keep(high_debt_aversion debt_aversion) ///
 >     b(3) se(3) star(* 0.10 ** 0.05 *** 0.01) stats(N r2, fmt(0 3)) nomtitles label
-(file output/table10a_2023_sample.csv not found)
 (output written to output/table10a_2023_sample.csv)
 
 . 
@@ -1689,7 +1682,6 @@ Note: dy/dx for factor levels is the discrete change from the base level.
 >     keep(high_debt_aversion 1.high_debt_aversion) ///
 >     b(3) se(3) star(* 0.10 ** 0.05 *** 0.01) stats(N, fmt(0)) ///
 >     mtitles("LPM" "Probit APE" "Logit APE")
-(file output/ext6_2023_probit_logit.csv not found)
 (output written to output/ext6_2023_probit_logit.csv)
 
 . restore
@@ -2311,7 +2303,6 @@ Note: dy/dx for factor levels is the discrete change from the base level.
 >     b(3) se(3) star(* 0.10 ** 0.05 *** 0.01) stats(N, fmt(0)) ///
 >     mtitles("Has debt LPM" "Has debt Probit" "Has debt Logit" ///
 >             "Applied LPM" "Applied Probit" "Applied Logit")
-(file output/ext1_probit_logit.csv not found)
 (output written to output/ext1_probit_logit.csv)
 
 . 
@@ -2320,7 +2311,6 @@ Note: dy/dx for factor levels is the discrete change from the base level.
 . *     so this should fail. then estimate wls with h = yhat(1-yhat).
 . 
 . file open het using "output/ext2_heteroskedasticity.csv", write replace
-(file output/ext2_heteroskedasticity.csv not found)
 
 . file write het "outcome,test,stat,df1,df2,p_value" _n
 
@@ -2791,7 +2781,6 @@ Tietojenkäsittely, tieto- j..  |    .047664   .0187415     2.54   0.015     .00
 >     using "output/ext2_wls.csv", replace keep(high_debt_aversion) ///
 >     b(3) se(3) star(* 0.10 ** 0.05 *** 0.01) stats(N, fmt(0)) ///
 >     mtitles("Has debt OLS" "Has debt WLS" "Applied OLS" "Applied WLS")
-(file output/ext2_wls.csv not found)
 (output written to output/ext2_wls.csv)
 
 . 
@@ -2800,7 +2789,6 @@ Tietojenkäsittely, tieto- j..  |    .047664   .0187415     2.54   0.015     .00
 . *     every score (most flexible), a quadratic, and the reset test.
 . 
 . file open ff using "output/ext3_functional_form.csv", write replace
-(file output/ext3_functional_form.csv not found)
 
 . file write ff "outcome,test,stat,df1,df2,p_value" _n
 
@@ -3393,14 +3381,1528 @@ applied_new_bank_loan turning point of the quadratic: .92153062
 >     keep(*.debt_aversion debt_aversion da_sq) ///
 >     b(3) se(3) star(* 0.10 ** 0.05 *** 0.01) stats(N r2, fmt(0 3)) ///
 >     mtitles("Has debt dummies" "Applied dummies" "Has debt quadratic" "Applied quadratic")
-(file output/ext3_score_dummies_quadratic.csv not found)
 (output written to output/ext3_score_dummies_quadratic.csv)
 
 . 
 . /*--- E4. Measurement error: instrumental variables (ch 15) ---*/
 . * H7: the survey score measures debt aversion with error, which biases ols
-. *     toward zero. this part is added in the final version, after chapter 15
-. *     is covered in class.
+. *     toward zero. iv uses what the owner was taught about debt as a child
+. *     as instruments for the score:
+. *       debt_avoid         "should be avoided" (0/1)
+. *       debt_divide_large  "useful to split large purchases" (0/1)
+. *     they must be correlated with debt aversion (first stage) and affect
+. *     debt use only through debt aversion (cannot be tested directly; the
+. *     overidentification test checks if the two give the same answer).
+. * the steps follow the course file Ch15_Instrumental_Variables.do. the
+. * estimates use clustered standard errors like the rest of the project.
+. 
+. foreach y in has_debt applied_new_bank_loan {
+  2.     if "`y'"=="has_debt" local s s_t3_2
+  3.     else local s s_t4_2b
+  4.     if "`y'"=="has_debt" local t hd
+  5.     else local t ab
+  6. 
+.     * ols estimation
+.     eststo e4_ols_`t': reg `y' debt_aversion $controls $fe2_dummies if `s', vce(cluster municip
+> ality)
+  7. 
+.     * 2sls with one instrument
+.     eststo e4_iv1_`t': ivregress 2sls `y' (debt_aversion = debt_avoid) $controls $fe2_dummies i
+> f `s', vce(cluster municipality) first
+  8.     * first stage with one instrument
+.     quietly reg debt_aversion $controls $fe2_dummies debt_avoid if `s', vce(cluster municipalit
+> y)
+  9.     test debt_avoid
+ 10.     scalar F_fs1_`t' = r(F)
+ 11. 
+.     * 2sls with two instruments
+.     eststo e4_iv2_`t': ivregress 2sls `y' (debt_aversion = debt_avoid debt_divide_large) $contr
+> ols $fe2_dummies if `s', vce(cluster municipality) first
+ 12. 
+.     * 2sls - first stage
+.     * regression of the endogenous variable debt_aversion on the instruments
+.     eststo e4_fs_`t': reg debt_aversion $controls $fe2_dummies debt_avoid debt_divide_large if 
+> `s', vce(cluster municipality)
+ 13.     * testing whether debt_aversion and the two instruments are correlated
+.     test debt_avoid debt_divide_large
+ 14.     scalar F_fs_`t' = r(F)
+ 15.     scalar p_fs_`t' = r(p)
+ 16.     * predicted values for da_hat
+.     predict da_hat_`t' if `s', xb
+ 17. 
+.     * 2sls - second stage
+.     * replace debt_aversion with its predicted value da_hat
+.     reg `y' da_hat_`t' $controls $fe2_dummies if `s'
+ 18.     * coefficients are correct but the standard errors are not correct
+.     display "`y' 2sls by hand: " _b[da_hat_`t']
+ 19. 
+.     * testing for over-identifying restrictions (estat overid needs the
+.     * default standard errors, as in the course file)
+.     quietly ivregress 2sls `y' (debt_aversion = debt_avoid debt_divide_large) $controls $fe2_du
+> mmies if `s'
+ 20.     estat overid
+ 21.     scalar sargan_`t' = r(sargan)
+ 22.     scalar p_sargan_`t' = r(p_sargan)
+ 23. 
+.     * testing for endogeneity of debt_aversion
+.     * estimate reduced form model for debt_aversion and predict the residuals vhat
+.     quietly reg debt_aversion $controls $fe2_dummies debt_avoid debt_divide_large if `s'
+ 24.     predict vhat_`t' if `s', residual
+ 25.     * structural equation that includes the residuals vhat
+.     * h0: coefficient on vhat = 0 (exogeneity), h1: coefficient on vhat ne 0 (endogeneity)
+.     reg `y' debt_aversion $controls $fe2_dummies vhat_`t' if `s', vce(cluster municipality)
+ 26.     scalar t_vhat_`t' = _b[vhat_`t']/_se[vhat_`t']
+ 27.     scalar p_vhat_`t' = 2*ttail(e(df_r), abs(t_vhat_`t'))
+ 28.     * the same test from stata after 2sls with the default standard errors
+.     quietly ivregress 2sls `y' (debt_aversion = debt_avoid debt_divide_large) $controls $fe2_du
+> mmies if `s'
+ 29.     estat endogenous
+ 30.     scalar p_durbin_`t' = r(p_durbin)
+ 31. }
+
+Linear regression                               Number of obs     =        884
+                                                F(42, 43)         =          .
+                                                Prob > F          =          .
+                                                R-squared         =     0.2145
+                                                Root MSE          =     .45717
+
+                                            (Std. err. adjusted for 44 clusters in municipality)
+------------------------------------------------------------------------------------------------
+                               |               Robust
+                      has_debt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------------------------+----------------------------------------------------------------
+                 debt_aversion |   -.019055   .0047381    -4.02   0.000    -.0286103   -.0094998
+                 risk_appetite |   .0132191   .0075732     1.75   0.088    -.0020537    .0284918
+                      optimism |   .0063286   .0082378     0.77   0.447    -.0102846    .0229418
+               distrust_people |    .009142   .0049065     1.86   0.069     -.000753    .0190369
+                distrust_banks |  -.0051567    .005098    -1.01   0.317    -.0154378    .0051244
+                               |
+                   n_employees |
+                          2–4  |   .1809894    .032503     5.57   0.000     .1154408     .246538
+                          5–9  |   .2481256   .0454078     5.46   0.000      .156552    .3396992
+                        10–50  |   .3113892   .0505166     6.16   0.000     .2095128    .4132656
+                       51–250  |   .3249414   .1010762     3.21   0.002     .1211018    .5287809
+                         250+  |   .6895695   .0567627    12.15   0.000     .5750966    .8040424
+                               |
+                      industry |
+          10-33 Manufacturing  |  -.1648515   .0977769    -1.69   0.099    -.3620374    .0323344
+           41-43 Construction  |  -.2602496   .1169492    -2.23   0.031    -.4961001   -.0243991
+45-47 Wholesale and retail ..  |  -.1988834   .1104693    -1.80   0.079    -.4216659    .0238992
+49-53 Transportation and st..  |  -.0853399    .101566    -0.84   0.405    -.2901673    .1194875
+55-56 Accommodation and foo..  |  -.2187836   .0897362    -2.44   0.019    -.3997539   -.0378132
+58-63 Information and commu..  |  -.2596594   .1012508    -2.56   0.014     -.463851   -.0554678
+    68 Real estate activities  |  -.1471509   .1239487    -1.19   0.242    -.3971173    .1028155
+69-75 Professional, scienti..  |  -.2871102   .0865115    -3.32   0.002    -.4615773   -.1126431
+77-82 Administrative and su..  |  -.1881518   .0794651    -2.37   0.022    -.3484084   -.0278952
+86-88 Human health and soci..  |  -.2371944   .1034011    -2.29   0.027    -.4457225   -.0286662
+90-93 Arts, entertainment a..  |  -.2283065   .0973621    -2.34   0.024    -.4246559   -.0319572
+94-96 Other service activit..  |  -.2407576   .0811982    -2.97   0.005    -.4045094   -.0770057
+                        Other  |  -.2045722   .0884324    -2.31   0.026    -.3829132   -.0262312
+                               |
+                 firm_survival |
+   Firm will probably survive  |   .0348072    .052212     0.67   0.509    -.0704884    .1401028
+      Firm will probably fail  |   .0529108   .1001748     0.53   0.600    -.1491108    .2549325
+               Firm will fail  |  -.0955114   .1783111    -0.54   0.595    -.4551099    .2640872
+                   Don't know  |  -.0044636   .1076668    -0.04   0.967    -.2215945    .2126673
+                               |
+                 survival_time |
+                      1 month  |  -.1341771   .0981562    -1.37   0.179    -.3321279    .0637737
+                     2 months  |  -.1622576   .0709686    -2.29   0.027    -.3053796   -.0191357
+                   3-4 months  |  -.2299092   .0822041    -2.80   0.008    -.3956896   -.0641288
+                   5-6 months  |  -.2244626   .0756405    -2.97   0.005    -.3770063    -.071919
+                  7-12 months  |  -.3208547   .0867232    -3.70   0.001    -.4957488   -.1459606
+                  > 12 months  |   -.388212    .092338    -4.20   0.000    -.5744293   -.2019947
+           No negative impact  |   -.379313   .0940471    -4.03   0.000     -.568977   -.1896489
+                   Don't know  |  -.2804105   .1079002    -2.60   0.013    -.4980119    -.062809
+                               |
+                    edu_sector |
+                  Kasvatusala  |   .0762172    .111804     0.68   0.499    -.1492571    .3016914
+Kauppa ja hallinto (liiket..)  |   .0823333   .0693937     1.19   0.242    -.0576125     .222279
+          Maa- ja metsätalous  |   .1150411   .0783881     1.47   0.149    -.0430435    .2731258
+Palvelualat (kauneudenhoito..  |   .1020006   .0745193     1.37   0.178    -.0482819    .2522831
+                  Sosiaaliala  |   .3373977   .1822707     1.85   0.071    -.0301861    .7049815
+         Taiteet ja kulttuuri  |   .0247938   .1335381     0.19   0.854    -.2445114     .294099
+Tekniikka, teollisuus ja ra..  |   .1289861    .069965     1.84   0.072    -.0121117     .270084
+       Terveys ja hyvinvointi  |  -.0278214   .0890741    -0.31   0.756    -.2074565    .1518136
+Tietojenkäsittely, tieto- j..  |   .0250665   .0820648     0.31   0.761    -.1404329    .1905659
+    Hotelli- ja ravintola-ala  |   .1777475   .1165132     1.53   0.134    -.0572238    .4127187
+                   Muu, mikä?  |   .0723864   .0889291     0.81   0.420    -.1069561     .251729
+                    Ei mikään  |   .1452003    .111991     1.30   0.202     -.080651    .3710517
+                En osaa sanoa  |   .3283709   .1479022     2.22   0.032     .0300977    .6266441
+                               |
+                     education |
+         Lukio tai ylioppilas  |  -.0769289    .097632    -0.79   0.435    -.2738226    .1199648
+        Ammatillinen koulutus  |  -.0941649   .0816047    -1.15   0.255    -.2587365    .0704066
+           Ammattikorkeakoulu  |  -.1787416   .0893582    -2.00   0.052    -.3589497    .0014664
+        Yliopisto/korkeakoulu  |  -.1839187   .0904565    -2.03   0.048    -.3663417   -.0014957
+                          Muu  |  -.0705815   .1170079    -0.60   0.550    -.3065504    .1653874
+                               |
+                         _cons |   .8307485   .1626226     5.11   0.000     .5027888    1.158708
+------------------------------------------------------------------------------------------------
+
+First-stage regressions
+-----------------------
+
+                                                     Number of obs   =     884
+                                                     No. of clusters =      44
+                                                     F(43, 830)      = 1315.95
+                                                     Prob > F        =  0.0000
+                                                     R-squared       =  0.2247
+                                                     Adj R-squared   =  0.1752
+                                                     Root MSE        =  2.6308
+
+------------------------------------------------------------------------------------------------
+                               |               Robust
+                 debt_aversion | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------------------------+----------------------------------------------------------------
+                 risk_appetite |  -.3317927   .0457794    -7.25   0.000    -.4216498   -.2419356
+                      optimism |   .0756209   .0472093     1.60   0.110    -.0170428    .1682845
+               distrust_people |   .0419503   .0550195     0.76   0.446    -.0660434    .1499441
+                distrust_banks |   .0968787   .0235018     4.12   0.000     .0507486    .1430087
+                               |
+                   n_employees |
+                          2–4  |   .1696326   .1671849     1.01   0.311    -.1585224    .4977875
+                          5–9  |  -.2326792   .2356764    -0.99   0.324    -.6952711    .2299126
+                        10–50  |  -.0896615   .2638511    -0.34   0.734    -.6075554    .4282324
+                       51–250  |  -.3067036   .4315173    -0.71   0.477    -1.153697    .5402899
+                         250+  |  -1.097106   .3352392    -3.27   0.001    -1.755122   -.4390897
+                               |
+                      industry |
+          10-33 Manufacturing  |   .0996576   .9198422     0.11   0.914    -1.705833    1.905148
+           41-43 Construction  |  -.5263881   .8203868    -0.64   0.521    -2.136665    1.083889
+45-47 Wholesale and retail ..  |  -.4718284   .8444809    -0.56   0.577    -2.129398    1.185741
+49-53 Transportation and st..  |  -.1090391   .8406597    -0.13   0.897    -1.759108     1.54103
+55-56 Accommodation and foo..  |  -1.329252    .948205    -1.40   0.161    -3.190414    .5319095
+58-63 Information and commu..  |   .1982855   1.028024     0.19   0.847    -1.819547    2.216118
+    68 Real estate activities  |  -1.019366   .9082102    -1.12   0.262    -2.802025    .7632929
+69-75 Professional, scienti..  |   .3359864   .8614344     0.39   0.697     -1.35486    2.026832
+77-82 Administrative and su..  |   .0197731   1.013406     0.02   0.984    -1.969366    2.008912
+86-88 Human health and soci..  |  -.1917102   .9006717    -0.21   0.831    -1.959572    1.576152
+90-93 Arts, entertainment a..  |   .8789063   .9754187     0.90   0.368    -1.035671    2.793484
+94-96 Other service activit..  |  -.5564919   .8645777    -0.64   0.520    -2.253508    1.140524
+                        Other  |   .0767921   .8878345     0.09   0.931    -1.665873    1.819457
+                               |
+                 firm_survival |
+   Firm will probably survive  |   .5963089   .1837665     3.24   0.001     .2356071    .9570107
+      Firm will probably fail  |   1.029607   .5582454     1.84   0.065     -.066132    2.125345
+               Firm will fail  |  -1.566326   .8706697    -1.80   0.072    -3.275299    .1426473
+                   Don't know  |   .8800985   .6920701     1.27   0.204    -.4783149    2.238512
+                               |
+                 survival_time |
+                      1 month  |  -.9967879   1.057358    -0.94   0.346    -3.072199    1.078623
+                     2 months  |  -1.054836   .6478522    -1.63   0.104    -2.326458     .216785
+                   3-4 months  |  -1.440571     .75479    -1.91   0.057    -2.922093    .0409505
+                   5-6 months  |  -1.255507   .5562362    -2.26   0.024    -2.347302   -.1637116
+                  7-12 months  |  -1.387531   .5145779    -2.70   0.007    -2.397559   -.3775043
+                  > 12 months  |  -1.300626   .7422686    -1.75   0.080    -2.757571    .1563179
+           No negative impact  |  -.9855518    .732905    -1.34   0.179    -2.424117    .4530135
+                   Don't know  |  -1.732588   .7578948    -2.29   0.023    -3.220204   -.2449721
+                               |
+                    edu_sector |
+                  Kasvatusala  |   .1783321   .7261776     0.25   0.806    -1.247028    1.603693
+Kauppa ja hallinto (liiket..)  |   .2710088   .4551971     0.60   0.552    -.6224639    1.164482
+          Maa- ja metsätalous  |  -.0615914   .4540289    -0.14   0.892    -.9527713    .8295885
+Palvelualat (kauneudenhoito..  |   .5692904   .4683048     1.22   0.224    -.3499105    1.488491
+                  Sosiaaliala  |  -.3435338   .6133557    -0.56   0.576    -1.547444    .8603769
+         Taiteet ja kulttuuri  |   .8150239   .7342251     1.11   0.267    -.6261324     2.25618
+Tekniikka, teollisuus ja ra..  |  -.3704902   .4730488    -0.78   0.434    -1.299003    .5580224
+       Terveys ja hyvinvointi  |   .4042503   .5047806     0.80   0.423    -.5865464    1.395047
+Tietojenkäsittely, tieto- j..  |   .6020462   .4399334     1.37   0.172    -.2614666    1.465559
+    Hotelli- ja ravintola-ala  |   .5561737   .8432447     0.66   0.510    -1.098969    2.211316
+                   Muu, mikä?  |   .5597557   .3577954     1.56   0.118    -.1425345    1.262046
+                    Ei mikään  |   -.793356   .5468769    -1.45   0.147     -1.86678    .2800684
+                En osaa sanoa  |  -.2867495   .6836184    -0.42   0.675    -1.628574    1.055075
+                               |
+                     education |
+         Lukio tai ylioppilas  |  -.6093672   .4873481    -1.25   0.212    -1.565947    .3472126
+        Ammatillinen koulutus  |  -.2962759   .4313473    -0.69   0.492    -1.142936    .5503838
+           Ammattikorkeakoulu  |   .0095786   .5235088     0.02   0.985    -1.017978    1.037135
+        Yliopisto/korkeakoulu  |  -.7943612   .3862404    -2.06   0.040    -1.552484   -.0362384
+                          Muu  |  -.8278727   .4808448    -1.72   0.085    -1.771688    .1159421
+                               |
+                    debt_avoid |   1.709973   .2050558     8.34   0.000     1.307484    2.112461
+                         _cons |   8.096427   1.201556     6.74   0.000     5.737981    10.45487
+------------------------------------------------------------------------------------------------
+
+
+Instrumental variables 2SLS regression            Number of obs   =        884
+                                                  Wald chi2(53)   =   20156.89
+                                                  Prob > chi2     =     0.0000
+                                                  R-squared       =     0.1979
+                                                  Root MSE        =     .44763
+
+                                            (Std. err. adjusted for 44 clusters in municipality)
+------------------------------------------------------------------------------------------------
+                               |               Robust
+                      has_debt | Coefficient  std. err.      z    P>|z|     [95% conf. interval]
+-------------------------------+----------------------------------------------------------------
+                 debt_aversion |   .0052371   .0244792     0.21   0.831    -.0427412    .0532153
+                 risk_appetite |   .0215705   .0109261     1.97   0.048     .0001558    .0429852
+                      optimism |   .0044327   .0076842     0.58   0.564    -.0106281    .0194934
+               distrust_people |   .0075972   .0046301     1.64   0.101    -.0014776    .0166719
+                distrust_banks |  -.0073909   .0060439    -1.22   0.221    -.0192368    .0044549
+                               |
+                   n_employees |
+                          2–4  |   .1796633   .0320323     5.61   0.000     .1168812    .2424454
+                          5–9  |   .2546392   .0413994     6.15   0.000     .1734978    .3357805
+                        10–50  |   .3128727    .046572     6.72   0.000     .2215932    .4041522
+                       51–250  |   .3373607   .0941901     3.58   0.000     .1527514    .5219699
+                         250+  |   .7232138   .0601909    12.02   0.000     .6052418    .8411858
+                               |
+                      industry |
+          10-33 Manufacturing  |  -.1761821   .1003297    -1.76   0.079    -.3728246    .0204605
+           41-43 Construction  |  -.2576905   .1130128    -2.28   0.023    -.4791916   -.0361894
+45-47 Wholesale and retail ..  |  -.1928652   .1104256    -1.75   0.081    -.4092954     .023565
+49-53 Transportation and st..  |  -.0867192   .1018389    -0.85   0.394    -.2863198    .1128815
+55-56 Accommodation and foo..  |  -.1918885   .0912224    -2.10   0.035    -.3706812   -.0130958
+58-63 Information and commu..  |  -.2717156   .0918438    -2.96   0.003    -.4517262    -.091705
+    68 Real estate activities  |   -.124989   .1173812    -1.06   0.287     -.355052    .1050739
+69-75 Professional, scienti..  |  -.3032949   .0938831    -3.23   0.001    -.4873023   -.1192875
+77-82 Administrative and su..  |  -.1905273   .0797483    -2.39   0.017     -.346831   -.0342236
+86-88 Human health and soci..  |  -.2392236   .0968327    -2.47   0.013    -.4290123   -.0494349
+90-93 Arts, entertainment a..  |  -.2523189   .0917572    -2.75   0.006    -.4321597   -.0724781
+94-96 Other service activit..  |   -.233743   .0801737    -2.92   0.004    -.3908805   -.0766054
+                        Other  |  -.2118549   .0878031    -2.41   0.016    -.3839459   -.0397639
+                               |
+                 firm_survival |
+   Firm will probably survive  |   .0197744   .0455693     0.43   0.664    -.0695398    .1090886
+      Firm will probably fail  |   .0291552   .0897348     0.32   0.745    -.1467216    .2050321
+               Firm will fail  |  -.0764993   .1717526    -0.45   0.656    -.4131282    .2601296
+                   Don't know  |  -.0278607   .0949187    -0.29   0.769    -.2138979    .1581766
+                               |
+                 survival_time |
+                      1 month  |  -.1014127   .0978046    -1.04   0.300    -.2931062    .0902807
+                     2 months  |  -.1355217   .0719317    -1.88   0.060    -.2765053    .0054619
+                   3-4 months  |  -.1915273   .0764259    -2.51   0.012    -.3413193   -.0417352
+                   5-6 months  |  -.1886152   .0747346    -2.52   0.012    -.3350924   -.0421381
+                  7-12 months  |  -.2819561   .0767944    -3.67   0.000    -.4324703    -.131442
+                  > 12 months  |  -.3510074   .0972296    -3.61   0.000    -.5415739   -.1604409
+           No negative impact  |  -.3503478   .0931384    -3.76   0.000    -.5328957      -.1678
+                   Don't know  |  -.2356603   .1145127    -2.06   0.040    -.4601011   -.0112195
+                               |
+                    edu_sector |
+                  Kasvatusala  |   .0732878   .1174568     0.62   0.533    -.1569233     .303499
+Kauppa ja hallinto (liiket..)  |   .0770747   .0723953     1.06   0.287    -.0648174    .2189669
+          Maa- ja metsätalous  |    .115015   .0755644     1.52   0.128    -.0330884    .2631184
+Palvelualat (kauneudenhoito..  |   .0856264   .0817533     1.05   0.295    -.0746071      .24586
+                  Sosiaaliala  |   .3321482   .1748391     1.90   0.057    -.0105301    .6748265
+         Taiteet ja kulttuuri  |   .0031823   .1456678     0.02   0.983    -.2823214    .2886861
+Tekniikka, teollisuus ja ra..  |       .139   .0687718     2.02   0.043     .0042096    .2737903
+       Terveys ja hyvinvointi  |  -.0363371     .08946    -0.41   0.685    -.2116754    .1390013
+Tietojenkäsittely, tieto- j..  |   .0111888   .0826506     0.14   0.892    -.1508034    .1731809
+    Hotelli- ja ravintola-ala  |   .1618543   .1179742     1.37   0.170     -.069371    .3930795
+                   Muu, mikä?  |   .0550908   .0988365     0.56   0.577    -.1386251    .2488067
+                    Ei mikään  |   .1637515   .1013359     1.62   0.106    -.0348632    .3623662
+                En osaa sanoa  |   .3461611   .1310518     2.64   0.008     .0893043    .6030178
+                               |
+                     education |
+         Lukio tai ylioppilas  |  -.0564702   .0881689    -0.64   0.522    -.2292781    .1163377
+        Ammatillinen koulutus  |  -.0819275   .0684154    -1.20   0.231    -.2160192    .0521642
+           Ammattikorkeakoulu  |  -.1769981   .0815343    -2.17   0.030    -.3368024   -.0171939
+        Yliopisto/korkeakoulu  |  -.1622923   .0742333    -2.19   0.029    -.3077869   -.0167976
+                          Muu  |  -.0523384   .1065328    -0.49   0.623    -.2611388     .156462
+                               |
+                         _cons |   .6227906   .1825104     3.41   0.001     .2650769    .9805044
+------------------------------------------------------------------------------------------------
+Instrumented: debt_aversion
+ Instruments: risk_appetite optimism distrust_people distrust_banks 2.n_employees
+              3.n_employees 4.n_employees 5.n_employees 6.n_employees 3.industry 6.industry
+              7.industry 8.industry 9.industry 10.industry 12.industry 13.industry 14.industry
+              17.industry 18.industry 19.industry 22.industry 2.firm_survival 3.firm_survival
+              4.firm_survival 5.firm_survival 2.survival_time 3.survival_time 4.survival_time
+              5.survival_time 6.survival_time 7.survival_time 8.survival_time 9.survival_time
+              2.edu_sector 3.edu_sector 4.edu_sector 5.edu_sector 6.edu_sector 7.edu_sector
+              8.edu_sector 9.edu_sector 10.edu_sector 11.edu_sector 12.edu_sector
+              13.edu_sector 14.edu_sector 2.education 3.education 4.education 5.education
+              6.education debt_avoid
+
+ ( 1)  debt_avoid = 0
+
+       F(  1,    43) =   70.05
+            Prob > F =    0.0000
+
+First-stage regressions
+-----------------------
+
+                                                     Number of obs   =     884
+                                                     No. of clusters =      44
+                                                     F(43, 829)      = 1690.38
+                                                     Prob > F        =  0.0000
+                                                     R-squared       =  0.2473
+                                                     Adj R-squared   =  0.1982
+                                                     Root MSE        =  2.5938
+
+------------------------------------------------------------------------------------------------
+                               |               Robust
+                 debt_aversion | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------------------------+----------------------------------------------------------------
+                 risk_appetite |  -.3198314   .0456799    -7.00   0.000    -.4094932   -.2301696
+                      optimism |   .0734445   .0471219     1.56   0.119    -.0190478    .1659369
+               distrust_people |   .0315603   .0523345     0.60   0.547    -.0711634    .1342839
+                distrust_banks |   .0896859   .0232937     3.85   0.000     .0439644    .1354075
+                               |
+                   n_employees |
+                          2–4  |   .1999179   .1681997     1.19   0.235    -.1302295    .5300654
+                          5–9  |  -.2580284   .2459933    -1.05   0.295    -.7408714    .2248147
+                        10–50  |  -.1097528   .2904211    -0.38   0.706       -.6798    .4602944
+                       51–250  |  -.1035797     .40218    -0.26   0.797    -.8929906    .6858312
+                         250+  |  -.9648589   .2735491    -3.53   0.000    -1.501789   -.4279286
+                               |
+                      industry |
+          10-33 Manufacturing  |    .034922    .991942     0.04   0.972    -1.912091    1.981935
+           41-43 Construction  |   -.658488    .924215    -0.71   0.476    -2.472565    1.155589
+45-47 Wholesale and retail ..  |  -.5455119   .9498951    -0.57   0.566    -2.409994     1.31897
+49-53 Transportation and st..  |  -.0803308   .8764797    -0.09   0.927    -1.800711     1.64005
+55-56 Accommodation and foo..  |  -1.503061   1.099749    -1.37   0.172    -3.661681    .6555603
+58-63 Information and commu..  |   .1132764   1.105026     0.10   0.918    -2.055701    2.282254
+    68 Real estate activities  |  -1.132865   .9758908    -1.16   0.246    -3.048372    .7826426
+69-75 Professional, scienti..  |    .055142   .9485767     0.06   0.954    -1.806752    1.917036
+77-82 Administrative and su..  |  -.1924284   1.107957    -0.17   0.862     -2.36716    1.982303
+86-88 Human health and soci..  |  -.3830924   1.049393    -0.37   0.715    -2.442872    1.676687
+90-93 Arts, entertainment a..  |   .7368266   1.095334     0.67   0.501    -1.413128    2.886781
+94-96 Other service activit..  |  -.6514972   .9336514    -0.70   0.486    -2.484096    1.181102
+                        Other  |  -.1637879   .9577713    -0.17   0.864     -2.04373    1.716154
+                               |
+                 firm_survival |
+   Firm will probably survive  |   .5464266   .1832773     2.98   0.003     .1866845    .9061687
+      Firm will probably fail  |   .9443158   .5696059     1.66   0.098    -.1737235    2.062355
+               Firm will fail  |  -1.525331   .9529609    -1.60   0.110    -3.395831    .3451692
+                   Don't know  |   .6876407   .6538258     1.05   0.293     -.595708    1.970989
+                               |
+                 survival_time |
+                      1 month  |  -1.148597   1.069628    -1.07   0.283    -3.248094    .9508996
+                     2 months  |  -1.089112   .6900448    -1.58   0.115    -2.443552    .2653284
+                   3-4 months  |  -1.481612   .7765897    -1.91   0.057    -3.005926    .0427011
+                   5-6 months  |  -1.282579   .5872307    -2.18   0.029    -2.435212   -.1299447
+                  7-12 months  |  -1.515035   .5359714    -2.83   0.005    -2.567056   -.4630147
+                  > 12 months  |  -1.334386   .7902697    -1.69   0.092    -2.885551     .216779
+           No negative impact  |  -1.048965   .8149853    -1.29   0.198    -2.648643    .5507119
+                   Don't know  |  -1.874892   .8331713    -2.25   0.025    -3.510265   -.2395186
+                               |
+                    edu_sector |
+                  Kasvatusala  |   .2617398   .7441488     0.35   0.725    -1.198897    1.722377
+Kauppa ja hallinto (liiket..)  |   .3314474   .4668467     0.71   0.478    -.5848933    1.247788
+          Maa- ja metsätalous  |  -.0016848    .446301    -0.00   0.997    -.8776977     .874328
+Palvelualat (kauneudenhoito..  |   .6429496   .4759608     1.35   0.177    -.2912804    1.577179
+                  Sosiaaliala  |  -.1414705   .5986728    -0.24   0.813    -1.316563    1.033622
+         Taiteet ja kulttuuri  |    .896867   .7552348     1.19   0.235    -.5855303    2.379264
+Tekniikka, teollisuus ja ra..  |  -.2696132    .470684    -0.57   0.567    -1.193486    .6542594
+       Terveys ja hyvinvointi  |   .4312362   .5180661     0.83   0.405    -.5856393    1.448112
+Tietojenkäsittely, tieto- j..  |   .6366071   .4791278     1.33   0.184    -.3038391    1.577053
+    Hotelli- ja ravintola-ala  |   .8369383   .8599366     0.97   0.331    -.8509708    2.524847
+                   Muu, mikä?  |   .5857111   .3749303     1.56   0.119    -.1502132    1.321635
+                    Ei mikään  |  -.5558016   .5571394    -1.00   0.319    -1.649371    .5377682
+                En osaa sanoa  |    .307866   .6651021     0.46   0.644    -.9976161    1.613348
+                               |
+                     education |
+         Lukio tai ylioppilas  |  -.4896496   .5035859    -0.97   0.331    -1.478103    .4988038
+        Ammatillinen koulutus  |  -.0942874   .4262381    -0.22   0.825    -.9309202    .7423454
+           Ammattikorkeakoulu  |   .1540082    .499216     0.31   0.758    -.8258679    1.133884
+        Yliopisto/korkeakoulu  |  -.5791925    .389868    -1.49   0.138    -1.344437    .1860521
+                          Muu  |  -.5895378   .5038507    -1.17   0.242    -1.578511    .3994353
+                               |
+                    debt_avoid |   1.592964   .2073942     7.68   0.000     1.185884    2.000043
+             debt_divide_large |  -1.218461   .2720238    -4.48   0.000    -1.752397   -.6845245
+                         _cons |   8.322615   1.353933     6.15   0.000     5.665076    10.98015
+------------------------------------------------------------------------------------------------
+
+
+Instrumental variables 2SLS regression            Number of obs   =        884
+                                                  Wald chi2(53)   =   24717.00
+                                                  Prob > chi2     =     0.0000
+                                                  R-squared       =     0.2142
+                                                  Root MSE        =     .44307
+
+                                            (Std. err. adjusted for 44 clusters in municipality)
+------------------------------------------------------------------------------------------------
+                               |               Robust
+                      has_debt | Coefficient  std. err.      z    P>|z|     [95% conf. interval]
+-------------------------------+----------------------------------------------------------------
+                 debt_aversion |  -.0157676   .0162338    -0.97   0.331    -.0475853    .0160502
+                 risk_appetite |   .0143493   .0079847     1.80   0.072    -.0013005     .029999
+                      optimism |    .006072   .0079027     0.77   0.442    -.0094171    .0215611
+               distrust_people |   .0089329   .0046088     1.94   0.053    -.0001002    .0179661
+                distrust_banks |   -.005459   .0053682    -1.02   0.309    -.0159804    .0050623
+                               |
+                   n_employees |
+                          2–4  |   .1808099   .0313642     5.76   0.000     .1193373    .2422826
+                          5–9  |   .2490071   .0434367     5.73   0.000     .1638728    .3341415
+                        10–50  |     .31159   .0478775     6.51   0.000     .2177519     .405428
+                       51–250  |   .3266221   .0941118     3.47   0.001     .1421664    .5110777
+                         250+  |   .6941226   .0585524    11.85   0.000      .579362    .8088832
+                               |
+                      industry |
+          10-33 Manufacturing  |  -.1663849    .095792    -1.74   0.082    -.3541337     .021364
+           41-43 Construction  |  -.2599032   .1118496    -2.32   0.020    -.4791244   -.0406821
+45-47 Wholesale and retail ..  |  -.1980689   .1055151    -1.88   0.060    -.4048748    .0087369
+49-53 Transportation and st..  |  -.0855266    .097901    -0.87   0.382     -.277409    .1063559
+55-56 Accommodation and foo..  |  -.2151439    .086468    -2.49   0.013     -.384618   -.0456697
+58-63 Information and commu..  |   -.261291   .0945753    -2.76   0.006    -.4466552   -.0759267
+    68 Real estate activities  |  -.1441517   .1190145    -1.21   0.226    -.3774158    .0891124
+69-75 Professional, scienti..  |  -.2893005   .0866151    -3.34   0.001    -.4590629   -.1195381
+77-82 Administrative and su..  |  -.1884733   .0760144    -2.48   0.013    -.3374588   -.0394878
+86-88 Human health and soci..  |   -.237469   .0986319    -2.41   0.016     -.430784    -.044154
+90-93 Arts, entertainment a..  |  -.2315562   .0943909    -2.45   0.014    -.4165589   -.0465534
+94-96 Other service activit..  |  -.2398083   .0775063    -3.09   0.002    -.3917177   -.0878988
+                        Other  |  -.2055578   .0851576    -2.41   0.016    -.3724636   -.0386519
+                               |
+                 firm_survival |
+   Firm will probably survive  |   .0327728   .0460286     0.71   0.476    -.0574417    .1229873
+      Firm will probably fail  |    .049696   .0923756     0.54   0.591    -.1313568    .2307488
+               Firm will fail  |  -.0929385   .1712547    -0.54   0.587    -.4285915    .2427146
+                   Don't know  |  -.0076299   .0972237    -0.08   0.937    -.1981848    .1829249
+                               |
+                 survival_time |
+                      1 month  |  -.1297431   .0968063    -1.34   0.180      -.31948    .0599939
+                     2 months  |  -.1586394   .0707166    -2.24   0.025    -.2972415   -.0200374
+                   3-4 months  |  -.2247149   .0779888    -2.88   0.004    -.3775701   -.0718598
+                   5-6 months  |  -.2196114   .0746985    -2.94   0.003    -.3660177   -.0732051
+                  7-12 months  |  -.3155905   .0809545    -3.90   0.000    -.4742585   -.1569226
+                  > 12 months  |  -.3831771   .0984677    -3.89   0.000    -.5761702   -.1901839
+           No negative impact  |  -.3753931   .0919182    -4.08   0.000    -.5555494   -.1952368
+                   Don't know  |  -.2743544   .1141513    -2.40   0.016    -.4980869    -.050622
+                               |
+                    edu_sector |
+                  Kasvatusala  |   .0758207   .1088816     0.70   0.486    -.1375832    .2892247
+Kauppa ja hallinto (liiket..)  |   .0816216   .0681313     1.20   0.231    -.0519133    .2151566
+          Maa- ja metsätalous  |   .1150376   .0750925     1.53   0.126     -.032141    .2622162
+Palvelualat (kauneudenhoito..  |   .0997846   .0769676     1.30   0.195    -.0510691    .2506383
+                  Sosiaaliala  |   .3366873   .1752199     1.92   0.055    -.0067374     .680112
+         Taiteet ja kulttuuri  |   .0218691   .1376485     0.16   0.874    -.2479169    .2916552
+Tekniikka, teollisuus ja ra..  |   .1303413   .0644064     2.02   0.043      .004107    .2565756
+       Terveys ja hyvinvointi  |  -.0289738   .0880008    -0.33   0.742    -.2014522    .1435045
+Tietojenkäsittely, tieto- j..  |   .0231884   .0798411     0.29   0.771    -.1332973    .1796741
+    Hotelli- ja ravintola-ala  |   .1755966   .1170273     1.50   0.133    -.0537727     .404966
+                   Muu, mikä?  |   .0700458    .091833     0.76   0.446    -.1099436    .2500352
+                    Ei mikään  |   .1477109   .1026261     1.44   0.150    -.0534325    .3488543
+                En osaa sanoa  |   .3307785   .1349255     2.45   0.014     .0663293    .5952276
+                               |
+                     education |
+         Lukio tai ylioppilas  |  -.0741602   .0885274    -0.84   0.402    -.2476707    .0993503
+        Ammatillinen koulutus  |  -.0925088   .0732392    -1.26   0.207    -.2360549    .0510373
+           Ammattikorkeakoulu  |  -.1785057   .0845369    -2.11   0.035     -.344195   -.0128163
+        Yliopisto/korkeakoulu  |   -.180992   .0783442    -2.31   0.021    -.3345438   -.0274401
+                          Muu  |  -.0681126   .1085116    -0.63   0.530    -.2807915    .1445663
+                               |
+                         _cons |   .8026055   .1433202     5.60   0.000      .521703    1.083508
+------------------------------------------------------------------------------------------------
+Instrumented: debt_aversion
+ Instruments: risk_appetite optimism distrust_people distrust_banks 2.n_employees
+              3.n_employees 4.n_employees 5.n_employees 6.n_employees 3.industry 6.industry
+              7.industry 8.industry 9.industry 10.industry 12.industry 13.industry 14.industry
+              17.industry 18.industry 19.industry 22.industry 2.firm_survival 3.firm_survival
+              4.firm_survival 5.firm_survival 2.survival_time 3.survival_time 4.survival_time
+              5.survival_time 6.survival_time 7.survival_time 8.survival_time 9.survival_time
+              2.edu_sector 3.edu_sector 4.edu_sector 5.edu_sector 6.edu_sector 7.edu_sector
+              8.edu_sector 9.edu_sector 10.edu_sector 11.edu_sector 12.edu_sector
+              13.edu_sector 14.edu_sector 2.education 3.education 4.education 5.education
+              6.education debt_avoid debt_divide_large
+
+Linear regression                               Number of obs     =        884
+                                                F(42, 43)         =          .
+                                                Prob > F          =          .
+                                                R-squared         =     0.2473
+                                                Root MSE          =     2.5938
+
+                                            (Std. err. adjusted for 44 clusters in municipality)
+------------------------------------------------------------------------------------------------
+                               |               Robust
+                 debt_aversion | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------------------------+----------------------------------------------------------------
+                 risk_appetite |  -.3198314   .0455142    -7.03   0.000    -.4116196   -.2280432
+                      optimism |   .0734445   .0469511     1.56   0.125    -.0212414    .1681304
+               distrust_people |   .0315603   .0521447     0.61   0.548    -.0735996    .1367202
+                distrust_banks |   .0896859   .0232092     3.86   0.000       .04288    .1364918
+                               |
+                   n_employees |
+                          2–4  |   .1999179     .16759     1.19   0.239    -.1380594    .5378953
+                          5–9  |  -.2580284   .2451015    -1.05   0.298    -.7523227     .236266
+                        10–50  |  -.1097528   .2893682    -0.38   0.706    -.6933195    .4738138
+                       51–250  |  -.1035797    .400722    -0.26   0.797    -.9117126    .7045532
+                         250+  |  -.9648589   .2725574    -3.54   0.001    -1.514523   -.4151946
+                               |
+                      industry |
+          10-33 Manufacturing  |    .034922   .9883458     0.04   0.972    -1.958267    2.028111
+           41-43 Construction  |   -.658488   .9208643    -0.72   0.478    -2.515588    1.198612
+45-47 Wholesale and retail ..  |  -.5455119   .9464514    -0.58   0.567    -2.454213    1.363189
+49-53 Transportation and st..  |  -.0803308   .8733021    -0.09   0.927    -1.841512    1.680851
+55-56 Accommodation and foo..  |  -1.503061   1.095762    -1.37   0.177    -3.712876     .706755
+58-63 Information and commu..  |   .1132764    1.10102     0.10   0.919    -2.107142    2.333694
+    68 Real estate activities  |  -1.132865   .9723528    -1.17   0.250    -3.093801    .8280715
+69-75 Professional, scienti..  |    .055142   .9451377     0.06   0.954     -1.85091    1.961194
+77-82 Administrative and su..  |  -.1924284    1.10394    -0.17   0.862    -2.418736    2.033879
+86-88 Human health and soci..  |  -.3830924   1.045589    -0.37   0.716    -2.491723    1.725538
+90-93 Arts, entertainment a..  |   .7368266   1.091363     0.68   0.503    -1.464117     2.93777
+94-96 Other service activit..  |  -.6514972   .9302666    -0.70   0.487    -2.527559    1.224564
+                        Other  |  -.1637879    .954299    -0.17   0.865    -2.088315    1.760739
+                               |
+                 firm_survival |
+   Firm will probably survive  |   .5464266   .1826128     2.99   0.005     .1781527    .9147005
+      Firm will probably fail  |   .9443158   .5675408     1.66   0.103    -.2002394    2.088871
+               Firm will fail  |  -1.525331   .9495061    -1.61   0.115    -3.440192    .3895307
+                   Don't know  |   .6876407   .6514554     1.06   0.297    -.6261443    2.001426
+                               |
+                 survival_time |
+                      1 month  |  -1.148597    1.06575    -1.08   0.287    -3.297887    1.000692
+                     2 months  |  -1.089112   .6875431    -1.58   0.121    -2.475675    .2974508
+                   3-4 months  |  -1.481612   .7737742    -1.91   0.062    -3.042077    .0788523
+                   5-6 months  |  -1.282579   .5851018    -2.19   0.034    -2.462549   -.1026084
+                  7-12 months  |  -1.515035   .5340283    -2.84   0.007    -2.592006   -.4380646
+                  > 12 months  |  -1.334386   .7874047    -1.69   0.097    -2.922339     .253567
+           No negative impact  |  -1.048965   .8120306    -1.29   0.203    -2.686581    .5886504
+                   Don't know  |  -1.874892   .8301507    -2.26   0.029     -3.54905   -.2007335
+                               |
+                    edu_sector |
+                  Kasvatusala  |   .2617398   .7414509     0.35   0.726    -1.233538    1.757018
+Kauppa ja hallinto (liiket..)  |   .3314474   .4651542     0.71   0.480    -.6066256     1.26952
+          Maa- ja metsätalous  |  -.0016848    .444683    -0.00   0.997    -.8984735    .8951039
+Palvelualat (kauneudenhoito..  |   .6429496   .4742352     1.36   0.182    -.3134369    1.599336
+                  Sosiaaliala  |  -.1414705   .5965024    -0.24   0.814    -1.344432    1.061491
+         Taiteet ja kulttuuri  |    .896867   .7524968     1.19   0.240    -.6206874    2.414421
+Tekniikka, teollisuus ja ra..  |  -.2696132   .4689776    -0.57   0.568    -1.215397    .6761703
+       Terveys ja hyvinvointi  |   .4312362   .5161879     0.84   0.408    -.6097559    1.472228
+Tietojenkäsittely, tieto- j..  |   .6366071   .4773907     1.33   0.189    -.3261431    1.599357
+    Hotelli- ja ravintola-ala  |   .8369383    .856819     0.98   0.334    -.8910019    2.564879
+                   Muu, mikä?  |   .5857111    .373571     1.57   0.124    -.1676666    1.339089
+                    Ei mikään  |  -.5558016   .5551196    -1.00   0.322    -1.675307    .5637037
+                En osaa sanoa  |    .307866   .6626908     0.46   0.645    -1.028577    1.644309
+                               |
+                     education |
+         Lukio tai ylioppilas  |  -.4896496   .5017602    -0.98   0.335    -1.501545    .5222463
+        Ammatillinen koulutus  |  -.0942874   .4246928    -0.22   0.825    -.9507621    .7621872
+           Ammattikorkeakoulu  |   .1540082   .4974062     0.31   0.758     -.849107    1.157123
+        Yliopisto/korkeakoulu  |  -.5791925   .3884546    -1.49   0.143    -1.362586    .2042009
+                          Muu  |  -.5895378    .502024    -1.17   0.247    -1.601966    .4228901
+                               |
+                    debt_avoid |   1.592964   .2066423     7.71   0.000      1.17623    2.009698
+             debt_divide_large |  -1.218461   .2710376    -4.50   0.000     -1.76506   -.6718615
+                         _cons |   8.322615   1.349024     6.17   0.000     5.602049    11.04318
+------------------------------------------------------------------------------------------------
+
+ ( 1)  debt_avoid = 0
+ ( 2)  debt_divide_large = 0
+
+       F(  2,    43) =   34.25
+            Prob > F =    0.0000
+(33 missing values generated)
+
+      Source |       SS           df       MS      Number of obs   =       884
+-------------+----------------------------------   F(53, 830)      =      4.04
+       Model |  45.2709692        53   .85416923   Prob > F        =    0.0000
+    Residual |  175.566135       830  .211525464   R-squared       =    0.2050
+-------------+----------------------------------   Adj R-squared   =    0.1542
+       Total |  220.837104       883  .250098646   Root MSE        =    .45992
+
+------------------------------------------------------------------------------------------------
+                      has_debt | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------------------------+----------------------------------------------------------------
+                     da_hat_hd |  -.0157676    .018481    -0.85   0.394    -.0520425    .0205074
+                 risk_appetite |   .0143493   .0100776     1.42   0.155    -.0054314    .0341299
+                      optimism |    .006072   .0089828     0.68   0.499    -.0115597    .0237037
+               distrust_people |   .0089329   .0068403     1.31   0.192    -.0044934    .0223592
+                distrust_banks |   -.005459   .0066201    -0.82   0.410    -.0184531     .007535
+                               |
+                   n_employees |
+                          2–4  |   .1808099   .0422467     4.28   0.000     .0978871    .2637328
+                          5–9  |   .2490071   .0454219     5.48   0.000     .1598518    .3381625
+                        10–50  |     .31159   .0520808     5.98   0.000     .2093644    .4138155
+                       51–250  |   .3266221   .1108201     2.95   0.003     .1091016    .5441426
+                         250+  |   .6941226   .2746519     2.53   0.012     .1550286    1.233217
+                               |
+                      industry |
+          10-33 Manufacturing  |  -.1663849     .13265    -1.25   0.210    -.4267538     .093984
+           41-43 Construction  |  -.2599032    .133558    -1.95   0.052    -.5220544    .0022479
+45-47 Wholesale and retail ..  |  -.1980689   .1274056    -1.55   0.120    -.4481439    .0520061
+49-53 Transportation and st..  |  -.0855266   .1360365    -0.63   0.530    -.3525425    .1814894
+55-56 Accommodation and foo..  |  -.2151439   .1399397    -1.54   0.125    -.4898211    .0595334
+58-63 Information and commu..  |   -.261291    .134363    -1.94   0.052    -.5250223    .0024403
+    68 Real estate activities  |  -.1441517   .1513528    -0.95   0.341     -.441231    .1529275
+69-75 Professional, scienti..  |  -.2893005   .1373995    -2.11   0.036    -.5589917   -.0196092
+77-82 Administrative and su..  |  -.1884733   .1462601    -1.29   0.198    -.4755565    .0986099
+86-88 Human health and soci..  |   -.237469   .1441332    -1.65   0.100    -.5203775    .0454395
+90-93 Arts, entertainment a..  |  -.2315561    .150638    -1.54   0.125    -.5272325    .0641202
+94-96 Other service activit..  |  -.2398083   .1255512    -1.91   0.056    -.4862435     .006627
+                        Other  |  -.2055578   .1279732    -1.61   0.109    -.4567469    .0456314
+                               |
+                 firm_survival |
+   Firm will probably survive  |   .0327728   .0415576     0.79   0.431    -.0487975    .1143431
+      Firm will probably fail  |    .049696   .0946345     0.53   0.600    -.1360551    .2354471
+               Firm will fail  |  -.0929385   .1570677    -0.59   0.554     -.401235    .2153581
+                   Don't know  |  -.0076299   .1217278    -0.06   0.950    -.2465605    .2313006
+                               |
+                 survival_time |
+                      1 month  |  -.1297431   .1195018    -1.09   0.278    -.3643043    .1048182
+                     2 months  |  -.1586395   .1082357    -1.47   0.143    -.3710874    .0538085
+                   3-4 months  |  -.2247149   .1057696    -2.12   0.034    -.4323223   -.0171076
+                   5-6 months  |  -.2196114   .1089024    -2.02   0.044    -.4333678    -.005855
+                  7-12 months  |  -.3155905   .1111889    -2.84   0.005     -.533835   -.0973461
+                  > 12 months  |  -.3831771   .1093815    -3.50   0.000    -.5978739   -.1684803
+           No negative impact  |  -.3753931    .109951    -3.41   0.001    -.5912079   -.1595783
+                   Don't know  |  -.2743544   .1244462    -2.20   0.028    -.5186206   -.0300882
+                               |
+                    edu_sector |
+                  Kasvatusala  |   .0758207    .156845     0.48   0.629    -.2320387    .3836802
+Kauppa ja hallinto (liiket..)  |   .0816216   .0971857     0.84   0.401    -.1091369    .2723802
+          Maa- ja metsätalous  |   .1150376    .123063     0.93   0.350    -.1265136    .3565888
+Palvelualat (kauneudenhoito..  |   .0997846   .1128116     0.88   0.377    -.1216449    .3212141
+                  Sosiaaliala  |   .3366873    .166018     2.03   0.043     .0108228    .6625518
+         Taiteet ja kulttuuri  |   .0218691   .1287254     0.17   0.865    -.2307964    .2745347
+Tekniikka, teollisuus ja ra..  |   .1303413   .0988159     1.32   0.188    -.0636172    .3242997
+       Terveys ja hyvinvointi  |  -.0289738   .1234289    -0.23   0.814    -.2712433    .2132956
+Tietojenkäsittely, tieto- j..  |   .0231884   .1192375     0.19   0.846    -.2108541     .257231
+    Hotelli- ja ravintola-ala  |   .1755966   .1377426     1.27   0.203    -.0947682    .4459614
+                   Muu, mikä?  |   .0700458   .1050944     0.67   0.505    -.1362363    .2763279
+                    Ei mikään  |   .1477109   .1422256     1.04   0.299    -.1314533     .426875
+                En osaa sanoa  |   .3307785   .2574365     1.28   0.199    -.1745247    .8360816
+                               |
+                     education |
+         Lukio tai ylioppilas  |  -.0741602   .1005727    -0.74   0.461     -.271567    .1232466
+        Ammatillinen koulutus  |  -.0925088   .0937731    -0.99   0.324    -.2765691    .0915514
+           Ammattikorkeakoulu  |  -.1785057   .0935229    -1.91   0.057    -.3620748    .0050634
+        Yliopisto/korkeakoulu  |   -.180992   .0969071    -1.87   0.062    -.3712037    .0092197
+                          Muu  |  -.0681126     .14117    -0.48   0.630    -.3452048    .2089795
+                               |
+                         _cons |   .8026055   .2691502     2.98   0.003     .2743105      1.3309
+------------------------------------------------------------------------------------------------
+has_debt 2sls by hand: -.01576757
+
+  Tests of overidentifying restrictions:
+
+  Sargan (score) chi2(1) =  3.76459  (p = 0.0523)
+  Basmann chi2(1)        =  3.54547  (p = 0.0597)
+(33 missing values generated)
+
+Linear regression                               Number of obs     =        884
+                                                F(42, 43)         =          .
+                                                Prob > F          =          .
+                                                R-squared         =     0.2145
+                                                Root MSE          =     .45743
+
+                                            (Std. err. adjusted for 44 clusters in municipality)
+------------------------------------------------------------------------------------------------
+                               |               Robust
+                      has_debt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------------------------+----------------------------------------------------------------
+                 debt_aversion |  -.0157676   .0168435    -0.94   0.354    -.0497358    .0182006
+                 risk_appetite |   .0143493   .0082596     1.74   0.089    -.0023078    .0310063
+                      optimism |    .006072   .0083075     0.73   0.469    -.0106817    .0228258
+               distrust_people |   .0089329   .0048409     1.85   0.072    -.0008297    .0186955
+                distrust_banks |   -.005459   .0056058    -0.97   0.336    -.0167641     .005846
+                               |
+                   n_employees |
+                          2–4  |   .1808099   .0327589     5.52   0.000     .1147453    .2468746
+                          5–9  |   .2490071   .0454345     5.48   0.000     .1573798    .3406345
+                        10–50  |     .31159   .0502908     6.20   0.000      .210169    .4130109
+                       51–250  |   .3266221   .0982279     3.33   0.002     .1285266    .5247176
+                         250+  |   .6941226   .0612607    11.33   0.000     .5705787    .8176665
+                               |
+                      industry |
+          10-33 Manufacturing  |  -.1663849   .0994644    -1.67   0.102    -.3669739    .0342042
+           41-43 Construction  |  -.2599032   .1166901    -2.23   0.031    -.4952313   -.0245752
+45-47 Wholesale and retail ..  |  -.1980689   .1091893    -1.81   0.077    -.4182701    .0221323
+49-53 Transportation and st..  |  -.0855266   .1018113    -0.84   0.406    -.2908487    .1197955
+55-56 Accommodation and foo..  |  -.2151439   .0896817    -2.40   0.021    -.3960042   -.0342835
+58-63 Information and commu..  |   -.261291   .0994731    -2.63   0.012    -.4618976   -.0606844
+    68 Real estate activities  |  -.1441517   .1247295    -1.16   0.254    -.3956928    .1073893
+69-75 Professional, scienti..  |  -.2893005   .0896177    -3.23   0.002    -.4700317   -.1085692
+77-82 Administrative and su..  |  -.1884733   .0792948    -2.38   0.022    -.3483864   -.0285602
+86-88 Human health and soci..  |   -.237469   .1036799    -2.29   0.027    -.4465593   -.0283786
+90-93 Arts, entertainment a..  |  -.2315562   .0994967    -2.33   0.025    -.4322103    -.030902
+94-96 Other service activit..  |  -.2398083   .0807156    -2.97   0.005    -.4025867   -.0770298
+                        Other  |  -.2055578   .0887457    -2.32   0.025    -.3845305   -.0265851
+                               |
+                 firm_survival |
+   Firm will probably survive  |   .0327728   .0481584     0.68   0.500    -.0643479    .1298935
+      Firm will probably fail  |    .049696    .096728     0.51   0.610    -.1453746    .2447665
+               Firm will fail  |  -.0929385   .1792334    -0.52   0.607    -.4543972    .2685202
+                   Don't know  |  -.0076299   .1013748    -0.08   0.940    -.2120717    .1968118
+                               |
+                 survival_time |
+                      1 month  |  -.1297431   .1013032    -1.28   0.207    -.3340404    .0745542
+                     2 months  |  -.1586394   .0740092    -2.14   0.038    -.3078933   -.0093856
+                   3-4 months  |  -.2247149   .0808484    -2.78   0.008    -.3877613   -.0616685
+                   5-6 months  |  -.2196114   .0778896    -2.82   0.007    -.3766907   -.0625321
+                  7-12 months  |  -.3155905   .0847234    -3.72   0.001    -.4864516   -.1447294
+                  > 12 months  |  -.3831771   .1033626    -3.71   0.001    -.5916276   -.1747265
+           No negative impact  |  -.3753931   .0959121    -3.91   0.000    -.5688182    -.181968
+                   Don't know  |  -.2743544   .1188157    -2.31   0.026    -.5139692   -.0347397
+                               |
+                    edu_sector |
+                  Kasvatusala  |   .0758207   .1120526     0.68   0.502    -.1501548    .3017963
+Kauppa ja hallinto (liiket..)  |   .0816216   .0706055     1.16   0.254     -.060768    .2240112
+          Maa- ja metsätalous  |   .1150376   .0785641     1.46   0.150     -.043402    .2734772
+Palvelualat (kauneudenhoito..  |   .0997846   .0798633     1.25   0.218     -.061275    .2608443
+                  Sosiaaliala  |   .3366873   .1829737     1.84   0.073    -.0323144     .705689
+         Taiteet ja kulttuuri  |   .0218691   .1424952     0.15   0.879    -.2654998     .309238
+Tekniikka, teollisuus ja ra..  |   .1303413   .0669256     1.95   0.058    -.0046271    .2653097
+       Terveys ja hyvinvointi  |  -.0289738   .0921438    -0.31   0.755    -.2147996    .1568519
+Tietojenkäsittely, tieto- j..  |   .0231884   .0834233     0.28   0.782    -.1450507    .1914276
+    Hotelli- ja ravintola-ala  |   .1755966   .1223949     1.43   0.159    -.0712363    .4224295
+                   Muu, mikä?  |   .0700458   .0952786     0.74   0.466    -.1221017    .2621933
+                    Ei mikään  |   .1477109   .1068916     1.38   0.174    -.0678566    .3632784
+                En osaa sanoa  |   .3307785   .1405538     2.35   0.023     .0473248    .6142322
+                               |
+                     education |
+         Lukio tai ylioppilas  |  -.0741602   .0923569    -0.80   0.426    -.2604156    .1120952
+        Ammatillinen koulutus  |  -.0925088   .0769966    -1.20   0.236    -.2477873    .0627696
+           Ammattikorkeakoulu  |  -.1785057    .088776    -2.01   0.051    -.3575396    .0005282
+        Yliopisto/korkeakoulu  |   -.180992   .0819694    -2.21   0.033    -.3462989    -.015685
+                          Muu  |  -.0681126   .1132627    -0.60   0.551    -.2965287    .1603035
+                               |
+                       vhat_hd |  -.0036525   .0184109    -0.20   0.844    -.0407815    .0334765
+                         _cons |   .8026055   .1504488     5.33   0.000     .4991965    1.106014
+------------------------------------------------------------------------------------------------
+
+  Tests of endogeneity
+  H0: Variables are exogenous
+
+  Durbin (score) chi2(1)          =  .037896  (p = 0.8457)
+  Wu-Hausman F(1,829)             =   .03554  (p = 0.8505)
+
+Linear regression                               Number of obs     =        884
+                                                F(42, 43)         =          .
+                                                Prob > F          =          .
+                                                R-squared         =     0.1768
+                                                Root MSE          =     .34085
+
+                                            (Std. err. adjusted for 44 clusters in municipality)
+------------------------------------------------------------------------------------------------
+                               |               Robust
+         applied_new_bank_loan | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------------------------+----------------------------------------------------------------
+                 debt_aversion |  -.0060998   .0042799    -1.43   0.161    -.0147311    .0025314
+                 risk_appetite |   .0106521   .0052994     2.01   0.051    -.0000351    .0213394
+                      optimism |   -.009326   .0071614    -1.30   0.200    -.0237684    .0051163
+               distrust_people |   .0036004   .0060702     0.59   0.556    -.0086415    .0158422
+                distrust_banks |   .0045248   .0036747     1.23   0.225     -.002886    .0119355
+                               |
+                   n_employees |
+                          2–4  |   .0866932   .0419559     2.07   0.045     .0020811    .1713053
+                          5–9  |   .1463241   .0358474     4.08   0.000     .0740309    .2186173
+                        10–50  |   .2230984   .0325359     6.86   0.000     .1574834    .2887134
+                       51–250  |   .1397152   .0855638     1.63   0.110    -.0328406     .312271
+                         250+  |   .3410341   .3163879     1.08   0.287    -.2970229    .9790911
+                               |
+                      industry |
+          10-33 Manufacturing  |  -.0249991   .0892232    -0.28   0.781    -.2049349    .1549367
+           41-43 Construction  |  -.0243246   .0951323    -0.26   0.799    -.2161772    .1675281
+45-47 Wholesale and retail ..  |  -.0129678   .0845783    -0.15   0.879    -.1835362    .1576006
+49-53 Transportation and st..  |   -.043949   .0806067    -0.55   0.588    -.2065079      .11861
+55-56 Accommodation and foo..  |   .0440831   .0948048     0.46   0.644    -.1471089    .2352751
+58-63 Information and commu..  |   -.009215   .0905406    -0.10   0.919    -.1918074    .1733774
+    68 Real estate activities  |  -.0358086   .1026234    -0.35   0.729    -.2427684    .1711513
+69-75 Professional, scienti..  |  -.0398315   .0835512    -0.48   0.636    -.2083286    .1286656
+77-82 Administrative and su..  |  -.0348582   .0860516    -0.41   0.687    -.2083977    .1386814
+86-88 Human health and soci..  |   .0348367    .084257     0.41   0.681    -.1350837     .204757
+90-93 Arts, entertainment a..  |  -.0049071   .0879481    -0.06   0.956    -.1822713    .1724571
+94-96 Other service activit..  |   .0450912   .0838557     0.54   0.594      -.12402    .2142024
+                        Other  |   .0184012   .0831008     0.22   0.826    -.1491876      .18599
+                               |
+                 firm_survival |
+   Firm will probably survive  |   .0104698    .034199     0.31   0.761     -.058499    .0794387
+      Firm will probably fail  |   .0576279   .0998353     0.58   0.567    -.1437092     .258965
+               Firm will fail  |  -.1714137   .1402916    -1.22   0.228    -.4543386    .1115113
+                   Don't know  |  -.1219755   .0786347    -1.55   0.128    -.2805575    .0366064
+                               |
+                 survival_time |
+                      1 month  |  -.1066417   .1592882    -0.67   0.507     -.427877    .2145936
+                     2 months  |  -.2578128   .1449935    -1.78   0.082    -.5502201    .0345945
+                   3-4 months  |  -.2678653   .1141502    -2.35   0.024    -.4980711   -.0376596
+                   5-6 months  |  -.3792518   .0996069    -3.81   0.000    -.5801283   -.1783754
+                  7-12 months  |  -.3711446   .1054589    -3.52   0.001    -.5838226   -.1584665
+                  > 12 months  |  -.4386272   .1142473    -3.84   0.000    -.6690288   -.2082257
+           No negative impact  |  -.4075973   .1128307    -3.61   0.001    -.6351421   -.1800525
+                   Don't know  |  -.3775941   .0907836    -4.16   0.000    -.5606766   -.1945116
+                               |
+                    edu_sector |
+                  Kasvatusala  |   .0102273    .121711     0.08   0.933    -.2352263     .255681
+Kauppa ja hallinto (liiket..)  |    .010939   .0408596     0.27   0.790    -.0714623    .0933403
+          Maa- ja metsätalous  |   .0065735   .0637646     0.10   0.918      -.12202     .135167
+Palvelualat (kauneudenhoito..  |   .0189238   .0781978     0.24   0.810    -.1387772    .1766247
+                  Sosiaaliala  |    .047047   .1126519     0.42   0.678    -.1801371    .2742312
+         Taiteet ja kulttuuri  |   .0680072   .0730883     0.93   0.357    -.0793895    .2154038
+Tekniikka, teollisuus ja ra..  |   .0231248   .0454992     0.51   0.614    -.0686332    .1148827
+       Terveys ja hyvinvointi  |  -.0956105   .0581968    -1.64   0.108    -.2129755    .0217546
+Tietojenkäsittely, tieto- j..  |   .0976672   .0516676     1.89   0.065    -.0065304    .2018648
+    Hotelli- ja ravintola-ala  |   -.033954   .1138333    -0.30   0.767    -.2635207    .1956127
+                   Muu, mikä?  |  -.0150666   .0492718    -0.31   0.761    -.1144327    .0842994
+                    Ei mikään  |   .1336995   .0793998     1.68   0.099    -.0264255    .2938245
+                En osaa sanoa  |   .0422814   .1246484     0.34   0.736     -.209096    .2936588
+                               |
+                     education |
+         Lukio tai ylioppilas  |  -.0893062   .0658308    -1.36   0.182    -.2220667    .0434543
+        Ammatillinen koulutus  |  -.0541803   .0811234    -0.67   0.508    -.2177812    .1094207
+           Ammattikorkeakoulu  |  -.0211897   .0779605    -0.27   0.787     -.178412    .1360326
+        Yliopisto/korkeakoulu  |  -.0251188   .0677425    -0.37   0.713    -.1617345    .1114969
+                          Muu  |  -.0469319   .0993858    -0.47   0.639    -.2473626    .1534987
+                               |
+                         _cons |     .42638    .155253     2.75   0.009     .1132824    .7394776
+------------------------------------------------------------------------------------------------
+
+First-stage regressions
+-----------------------
+
+                                                     Number of obs   =     884
+                                                     No. of clusters =      44
+                                                     F(43, 830)      = 1315.95
+                                                     Prob > F        =  0.0000
+                                                     R-squared       =  0.2247
+                                                     Adj R-squared   =  0.1752
+                                                     Root MSE        =  2.6308
+
+------------------------------------------------------------------------------------------------
+                               |               Robust
+                 debt_aversion | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------------------------+----------------------------------------------------------------
+                 risk_appetite |  -.3317927   .0457794    -7.25   0.000    -.4216498   -.2419356
+                      optimism |   .0756209   .0472093     1.60   0.110    -.0170428    .1682845
+               distrust_people |   .0419503   .0550195     0.76   0.446    -.0660434    .1499441
+                distrust_banks |   .0968787   .0235018     4.12   0.000     .0507486    .1430087
+                               |
+                   n_employees |
+                          2–4  |   .1696326   .1671849     1.01   0.311    -.1585224    .4977875
+                          5–9  |  -.2326792   .2356764    -0.99   0.324    -.6952711    .2299126
+                        10–50  |  -.0896615   .2638511    -0.34   0.734    -.6075554    .4282324
+                       51–250  |  -.3067036   .4315173    -0.71   0.477    -1.153697    .5402899
+                         250+  |  -1.097106   .3352392    -3.27   0.001    -1.755122   -.4390897
+                               |
+                      industry |
+          10-33 Manufacturing  |   .0996576   .9198422     0.11   0.914    -1.705833    1.905148
+           41-43 Construction  |  -.5263881   .8203868    -0.64   0.521    -2.136665    1.083889
+45-47 Wholesale and retail ..  |  -.4718284   .8444809    -0.56   0.577    -2.129398    1.185741
+49-53 Transportation and st..  |  -.1090391   .8406597    -0.13   0.897    -1.759108     1.54103
+55-56 Accommodation and foo..  |  -1.329252    .948205    -1.40   0.161    -3.190414    .5319095
+58-63 Information and commu..  |   .1982855   1.028024     0.19   0.847    -1.819547    2.216118
+    68 Real estate activities  |  -1.019366   .9082102    -1.12   0.262    -2.802025    .7632929
+69-75 Professional, scienti..  |   .3359864   .8614344     0.39   0.697     -1.35486    2.026832
+77-82 Administrative and su..  |   .0197731   1.013406     0.02   0.984    -1.969366    2.008912
+86-88 Human health and soci..  |  -.1917102   .9006717    -0.21   0.831    -1.959572    1.576152
+90-93 Arts, entertainment a..  |   .8789063   .9754187     0.90   0.368    -1.035671    2.793484
+94-96 Other service activit..  |  -.5564919   .8645777    -0.64   0.520    -2.253508    1.140524
+                        Other  |   .0767921   .8878345     0.09   0.931    -1.665873    1.819457
+                               |
+                 firm_survival |
+   Firm will probably survive  |   .5963089   .1837665     3.24   0.001     .2356071    .9570107
+      Firm will probably fail  |   1.029607   .5582454     1.84   0.065     -.066132    2.125345
+               Firm will fail  |  -1.566326   .8706697    -1.80   0.072    -3.275299    .1426473
+                   Don't know  |   .8800985   .6920701     1.27   0.204    -.4783149    2.238512
+                               |
+                 survival_time |
+                      1 month  |  -.9967879   1.057358    -0.94   0.346    -3.072199    1.078623
+                     2 months  |  -1.054836   .6478522    -1.63   0.104    -2.326458     .216785
+                   3-4 months  |  -1.440571     .75479    -1.91   0.057    -2.922093    .0409505
+                   5-6 months  |  -1.255507   .5562362    -2.26   0.024    -2.347302   -.1637116
+                  7-12 months  |  -1.387531   .5145779    -2.70   0.007    -2.397559   -.3775043
+                  > 12 months  |  -1.300626   .7422686    -1.75   0.080    -2.757571    .1563179
+           No negative impact  |  -.9855518    .732905    -1.34   0.179    -2.424117    .4530135
+                   Don't know  |  -1.732588   .7578948    -2.29   0.023    -3.220204   -.2449721
+                               |
+                    edu_sector |
+                  Kasvatusala  |   .1783321   .7261776     0.25   0.806    -1.247028    1.603693
+Kauppa ja hallinto (liiket..)  |   .2710088   .4551971     0.60   0.552    -.6224639    1.164482
+          Maa- ja metsätalous  |  -.0615914   .4540289    -0.14   0.892    -.9527713    .8295885
+Palvelualat (kauneudenhoito..  |   .5692904   .4683048     1.22   0.224    -.3499105    1.488491
+                  Sosiaaliala  |  -.3435338   .6133557    -0.56   0.576    -1.547444    .8603769
+         Taiteet ja kulttuuri  |   .8150239   .7342251     1.11   0.267    -.6261324     2.25618
+Tekniikka, teollisuus ja ra..  |  -.3704902   .4730488    -0.78   0.434    -1.299003    .5580224
+       Terveys ja hyvinvointi  |   .4042503   .5047806     0.80   0.423    -.5865464    1.395047
+Tietojenkäsittely, tieto- j..  |   .6020462   .4399334     1.37   0.172    -.2614666    1.465559
+    Hotelli- ja ravintola-ala  |   .5561737   .8432447     0.66   0.510    -1.098969    2.211316
+                   Muu, mikä?  |   .5597557   .3577954     1.56   0.118    -.1425345    1.262046
+                    Ei mikään  |   -.793356   .5468769    -1.45   0.147     -1.86678    .2800684
+                En osaa sanoa  |  -.2867495   .6836184    -0.42   0.675    -1.628574    1.055075
+                               |
+                     education |
+         Lukio tai ylioppilas  |  -.6093672   .4873481    -1.25   0.212    -1.565947    .3472126
+        Ammatillinen koulutus  |  -.2962759   .4313473    -0.69   0.492    -1.142936    .5503838
+           Ammattikorkeakoulu  |   .0095786   .5235088     0.02   0.985    -1.017978    1.037135
+        Yliopisto/korkeakoulu  |  -.7943612   .3862404    -2.06   0.040    -1.552484   -.0362384
+                          Muu  |  -.8278727   .4808448    -1.72   0.085    -1.771688    .1159421
+                               |
+                    debt_avoid |   1.709973   .2050558     8.34   0.000     1.307484    2.112461
+                         _cons |   8.096427   1.201556     6.74   0.000     5.737981    10.45487
+------------------------------------------------------------------------------------------------
+
+
+Instrumental variables 2SLS regression            Number of obs   =        884
+                                                  Wald chi2(53)   =    8379.19
+                                                  Prob > chi2     =     0.0000
+                                                  R-squared       =     0.1768
+                                                  Root MSE        =     .33028
+
+                                            (Std. err. adjusted for 44 clusters in municipality)
+------------------------------------------------------------------------------------------------
+                               |               Robust
+         applied_new_bank_loan | Coefficient  std. err.      z    P>|z|     [95% conf. interval]
+-------------------------------+----------------------------------------------------------------
+                 debt_aversion |  -.0059555   .0195778    -0.30   0.761    -.0443273    .0324164
+                 risk_appetite |   .0107018   .0076552     1.40   0.162    -.0043021    .0257056
+                      optimism |  -.0093373   .0065182    -1.43   0.152    -.0221127    .0034382
+               distrust_people |   .0035912   .0053652     0.67   0.503    -.0069244    .0141067
+                distrust_banks |   .0045115   .0044059     1.02   0.306     -.004124    .0131469
+                               |
+                   n_employees |
+                          2–4  |   .0866853   .0396114     2.19   0.029     .0090483    .1643223
+                          5–9  |   .1463628     .03672     3.99   0.000      .074393    .2183326
+                        10–50  |   .2231072   .0316819     7.04   0.000     .1610118    .2852027
+                       51–250  |    .139789   .0800754     1.75   0.081     -.017156    .2967339
+                         250+  |    .341234     .30757     1.11   0.267    -.2615921    .9440601
+                               |
+                      industry |
+          10-33 Manufacturing  |  -.0250664   .0881648    -0.28   0.776    -.1978662    .1477333
+           41-43 Construction  |  -.0243093   .0908031    -0.27   0.789    -.2022802    .1536615
+45-47 Wholesale and retail ..  |  -.0129321   .0795519    -0.16   0.871     -.168851    .1429868
+49-53 Transportation and st..  |  -.0439572   .0774663    -0.57   0.570    -.1957883    .1078739
+55-56 Accommodation and foo..  |   .0442429   .0952001     0.46   0.642    -.1423459    .2308317
+58-63 Information and commu..  |  -.0092866   .0889133    -0.10   0.917    -.1835535    .1649802
+    68 Real estate activities  |  -.0356769   .0944967    -0.38   0.706    -.2208871    .1495334
+69-75 Professional, scienti..  |  -.0399276   .0878097    -0.45   0.649    -.2120315    .1321762
+77-82 Administrative and su..  |  -.0348723   .0833631    -0.42   0.676    -.1982609    .1285164
+86-88 Human health and soci..  |   .0348246   .0810071     0.43   0.667    -.1239463    .1935955
+90-93 Arts, entertainment a..  |  -.0050498   .0903195    -0.06   0.955    -.1820727    .1719732
+94-96 Other service activit..  |   .0451329   .0785185     0.57   0.565    -.1087605    .1990263
+                        Other  |    .018358   .0815791     0.23   0.822    -.1415342    .1782501
+                               |
+                 firm_survival |
+   Firm will probably survive  |   .0103805   .0335512     0.31   0.757    -.0553786    .0761396
+      Firm will probably fail  |   .0574868    .089777     0.64   0.522     -.118473    .2334465
+               Firm will fail  |  -.1713007   .1271148    -1.35   0.178    -.4204412    .0778398
+                   Don't know  |  -.1221145    .081671    -1.50   0.135    -.2821867    .0379576
+                               |
+                 survival_time |
+                      1 month  |   -.106447   .1727631    -0.62   0.538    -.4450565    .2321625
+                     2 months  |  -.2576539    .154304    -1.67   0.095    -.5600843    .0447764
+                   3-4 months  |  -.2676373    .131108    -2.04   0.041    -.5246041   -.0106704
+                   5-6 months  |  -.3790388   .1141174    -3.32   0.001    -.6027048   -.1553729
+                  7-12 months  |  -.3709134   .1230727    -3.01   0.003    -.6121314   -.1296954
+                  > 12 months  |  -.4384061   .1315464    -3.33   0.001    -.6962324   -.1805799
+           No negative impact  |  -.4074252   .1231476    -3.31   0.001    -.6487901   -.1660603
+                   Don't know  |  -.3773282   .1078224    -3.50   0.000    -.5886563   -.1660001
+                               |
+                    edu_sector |
+                  Kasvatusala  |   .0102099    .118017     0.09   0.931    -.2210992    .2415191
+Kauppa ja hallinto (liiket..)  |   .0109078   .0409741     0.27   0.790       -.0694    .0912155
+          Maa- ja metsätalous  |   .0065733    .061113     0.11   0.914     -.113206    .1263527
+Palvelualat (kauneudenhoito..  |   .0188265   .0845852     0.22   0.824    -.1469574    .1846103
+                  Sosiaaliala  |   .0470158    .108797     0.43   0.666    -.1662223     .260254
+         Taiteet ja kulttuuri  |   .0678787    .072972     0.93   0.352    -.0751438    .2109013
+Tekniikka, teollisuus ja ra..  |   .0231843   .0406457     0.57   0.568    -.0564799    .1028484
+       Terveys ja hyvinvointi  |  -.0956611   .0591615    -1.62   0.106    -.2116155    .0202933
+Tietojenkäsittely, tieto- j..  |   .0975847   .0520281     1.88   0.061    -.0043884    .1995579
+    Hotelli- ja ravintola-ala  |  -.0340484   .1159884    -0.29   0.769    -.2613814    .1932846
+                   Muu, mikä?  |  -.0151694   .0560157    -0.27   0.787    -.1249582    .0946194
+                    Ei mikään  |   .1338098   .0800739     1.67   0.095    -.0231322    .2907518
+                En osaa sanoa  |   .0423871   .1231645     0.34   0.731    -.1990108    .2837851
+                               |
+                     education |
+         Lukio tai ylioppilas  |  -.0891846   .0601736    -1.48   0.138    -.2071227    .0287535
+        Ammatillinen koulutus  |  -.0541076   .0831428    -0.65   0.515    -.2170644    .1088493
+           Ammattikorkeakoulu  |  -.0211793   .0752963    -0.28   0.778    -.1687574    .1263987
+        Yliopisto/korkeakoulu  |  -.0249903    .074629    -0.33   0.738    -.1712604    .1212799
+                          Muu  |  -.0468235   .0999766    -0.47   0.640    -.2427741     .149127
+                               |
+                         _cons |   .4251443   .2725268     1.56   0.119    -.1089985     .959287
+------------------------------------------------------------------------------------------------
+Instrumented: debt_aversion
+ Instruments: risk_appetite optimism distrust_people distrust_banks 2.n_employees
+              3.n_employees 4.n_employees 5.n_employees 6.n_employees 3.industry 6.industry
+              7.industry 8.industry 9.industry 10.industry 12.industry 13.industry 14.industry
+              17.industry 18.industry 19.industry 22.industry 2.firm_survival 3.firm_survival
+              4.firm_survival 5.firm_survival 2.survival_time 3.survival_time 4.survival_time
+              5.survival_time 6.survival_time 7.survival_time 8.survival_time 9.survival_time
+              2.edu_sector 3.edu_sector 4.edu_sector 5.edu_sector 6.edu_sector 7.edu_sector
+              8.edu_sector 9.edu_sector 10.edu_sector 11.edu_sector 12.edu_sector
+              13.edu_sector 14.edu_sector 2.education 3.education 4.education 5.education
+              6.education debt_avoid
+
+ ( 1)  debt_avoid = 0
+
+       F(  1,    43) =   70.05
+            Prob > F =    0.0000
+
+First-stage regressions
+-----------------------
+
+                                                     Number of obs   =     884
+                                                     No. of clusters =      44
+                                                     F(43, 829)      = 1690.38
+                                                     Prob > F        =  0.0000
+                                                     R-squared       =  0.2473
+                                                     Adj R-squared   =  0.1982
+                                                     Root MSE        =  2.5938
+
+------------------------------------------------------------------------------------------------
+                               |               Robust
+                 debt_aversion | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------------------------+----------------------------------------------------------------
+                 risk_appetite |  -.3198314   .0456799    -7.00   0.000    -.4094932   -.2301696
+                      optimism |   .0734445   .0471219     1.56   0.119    -.0190478    .1659369
+               distrust_people |   .0315603   .0523345     0.60   0.547    -.0711634    .1342839
+                distrust_banks |   .0896859   .0232937     3.85   0.000     .0439644    .1354075
+                               |
+                   n_employees |
+                          2–4  |   .1999179   .1681997     1.19   0.235    -.1302295    .5300654
+                          5–9  |  -.2580284   .2459933    -1.05   0.295    -.7408714    .2248147
+                        10–50  |  -.1097528   .2904211    -0.38   0.706       -.6798    .4602944
+                       51–250  |  -.1035797     .40218    -0.26   0.797    -.8929906    .6858312
+                         250+  |  -.9648589   .2735491    -3.53   0.000    -1.501789   -.4279286
+                               |
+                      industry |
+          10-33 Manufacturing  |    .034922    .991942     0.04   0.972    -1.912091    1.981935
+           41-43 Construction  |   -.658488    .924215    -0.71   0.476    -2.472565    1.155589
+45-47 Wholesale and retail ..  |  -.5455119   .9498951    -0.57   0.566    -2.409994     1.31897
+49-53 Transportation and st..  |  -.0803308   .8764797    -0.09   0.927    -1.800711     1.64005
+55-56 Accommodation and foo..  |  -1.503061   1.099749    -1.37   0.172    -3.661681    .6555603
+58-63 Information and commu..  |   .1132764   1.105026     0.10   0.918    -2.055701    2.282254
+    68 Real estate activities  |  -1.132865   .9758908    -1.16   0.246    -3.048372    .7826426
+69-75 Professional, scienti..  |    .055142   .9485767     0.06   0.954    -1.806752    1.917036
+77-82 Administrative and su..  |  -.1924284   1.107957    -0.17   0.862     -2.36716    1.982303
+86-88 Human health and soci..  |  -.3830924   1.049393    -0.37   0.715    -2.442872    1.676687
+90-93 Arts, entertainment a..  |   .7368266   1.095334     0.67   0.501    -1.413128    2.886781
+94-96 Other service activit..  |  -.6514972   .9336514    -0.70   0.486    -2.484096    1.181102
+                        Other  |  -.1637879   .9577713    -0.17   0.864     -2.04373    1.716154
+                               |
+                 firm_survival |
+   Firm will probably survive  |   .5464266   .1832773     2.98   0.003     .1866845    .9061687
+      Firm will probably fail  |   .9443158   .5696059     1.66   0.098    -.1737235    2.062355
+               Firm will fail  |  -1.525331   .9529609    -1.60   0.110    -3.395831    .3451692
+                   Don't know  |   .6876407   .6538258     1.05   0.293     -.595708    1.970989
+                               |
+                 survival_time |
+                      1 month  |  -1.148597   1.069628    -1.07   0.283    -3.248094    .9508996
+                     2 months  |  -1.089112   .6900448    -1.58   0.115    -2.443552    .2653284
+                   3-4 months  |  -1.481612   .7765897    -1.91   0.057    -3.005926    .0427011
+                   5-6 months  |  -1.282579   .5872307    -2.18   0.029    -2.435212   -.1299447
+                  7-12 months  |  -1.515035   .5359714    -2.83   0.005    -2.567056   -.4630147
+                  > 12 months  |  -1.334386   .7902697    -1.69   0.092    -2.885551     .216779
+           No negative impact  |  -1.048965   .8149853    -1.29   0.198    -2.648643    .5507119
+                   Don't know  |  -1.874892   .8331713    -2.25   0.025    -3.510265   -.2395186
+                               |
+                    edu_sector |
+                  Kasvatusala  |   .2617398   .7441488     0.35   0.725    -1.198897    1.722377
+Kauppa ja hallinto (liiket..)  |   .3314474   .4668467     0.71   0.478    -.5848933    1.247788
+          Maa- ja metsätalous  |  -.0016848    .446301    -0.00   0.997    -.8776977     .874328
+Palvelualat (kauneudenhoito..  |   .6429496   .4759608     1.35   0.177    -.2912804    1.577179
+                  Sosiaaliala  |  -.1414705   .5986728    -0.24   0.813    -1.316563    1.033622
+         Taiteet ja kulttuuri  |    .896867   .7552348     1.19   0.235    -.5855303    2.379264
+Tekniikka, teollisuus ja ra..  |  -.2696132    .470684    -0.57   0.567    -1.193486    .6542594
+       Terveys ja hyvinvointi  |   .4312362   .5180661     0.83   0.405    -.5856393    1.448112
+Tietojenkäsittely, tieto- j..  |   .6366071   .4791278     1.33   0.184    -.3038391    1.577053
+    Hotelli- ja ravintola-ala  |   .8369383   .8599366     0.97   0.331    -.8509708    2.524847
+                   Muu, mikä?  |   .5857111   .3749303     1.56   0.119    -.1502132    1.321635
+                    Ei mikään  |  -.5558016   .5571394    -1.00   0.319    -1.649371    .5377682
+                En osaa sanoa  |    .307866   .6651021     0.46   0.644    -.9976161    1.613348
+                               |
+                     education |
+         Lukio tai ylioppilas  |  -.4896496   .5035859    -0.97   0.331    -1.478103    .4988038
+        Ammatillinen koulutus  |  -.0942874   .4262381    -0.22   0.825    -.9309202    .7423454
+           Ammattikorkeakoulu  |   .1540082    .499216     0.31   0.758    -.8258679    1.133884
+        Yliopisto/korkeakoulu  |  -.5791925    .389868    -1.49   0.138    -1.344437    .1860521
+                          Muu  |  -.5895378   .5038507    -1.17   0.242    -1.578511    .3994353
+                               |
+                    debt_avoid |   1.592964   .2073942     7.68   0.000     1.185884    2.000043
+             debt_divide_large |  -1.218461   .2720238    -4.48   0.000    -1.752397   -.6845245
+                         _cons |   8.322615   1.353933     6.15   0.000     5.665076    10.98015
+------------------------------------------------------------------------------------------------
+
+
+Instrumental variables 2SLS regression            Number of obs   =        884
+                                                  Wald chi2(53)   =   10748.78
+                                                  Prob > chi2     =     0.0000
+                                                  R-squared       =     0.1732
+                                                  Root MSE        =     .33099
+
+                                            (Std. err. adjusted for 44 clusters in municipality)
+------------------------------------------------------------------------------------------------
+                               |               Robust
+         applied_new_bank_loan | Coefficient  std. err.      z    P>|z|     [95% conf. interval]
+-------------------------------+----------------------------------------------------------------
+                 debt_aversion |  -.0143361   .0144131    -0.99   0.320    -.0425852     .013913
+                 risk_appetite |   .0078206   .0060891     1.28   0.199    -.0041139     .019755
+                      optimism |  -.0086832   .0064006    -1.36   0.175    -.0212282    .0038618
+               distrust_people |   .0041241    .005789     0.71   0.476    -.0072221    .0154703
+                distrust_banks |   .0052823    .004032     1.31   0.190    -.0026203    .0131849
+                               |
+                   n_employees |
+                          2–4  |   .0871428   .0401953     2.17   0.030     .0083614    .1659242
+                          5–9  |   .1441157   .0356038     4.05   0.000     .0743335    .2138979
+                        10–50  |   .2225954   .0315343     7.06   0.000     .1607893    .2844015
+                       51–250  |   .1355044   .0784617     1.73   0.084    -.0182777    .2892865
+                         250+  |    .329627   .3103759     1.06   0.288    -.2786986    .9379525
+                               |
+                      industry |
+          10-33 Manufacturing  |  -.0211575   .0863136    -0.25   0.806    -.1903289     .148014
+           41-43 Construction  |  -.0251922   .0916008    -0.28   0.783    -.2047265    .1543421
+45-47 Wholesale and retail ..  |  -.0150083   .0788806    -0.19   0.849    -.1696115    .1395949
+49-53 Transportation and st..  |  -.0434813   .0773381    -0.56   0.574    -.1950612    .1080986
+55-56 Accommodation and foo..  |   .0349643   .0943832     0.37   0.711    -.1500234     .219952
+58-63 Information and commu..  |  -.0051273   .0870188    -0.06   0.953    -.1756811    .1654264
+    68 Real estate activities  |  -.0433226   .0945779    -0.46   0.647    -.2286918    .1420467
+69-75 Professional, scienti..  |   -.034344   .0820652    -0.42   0.676    -.1951889    .1265009
+77-82 Administrative and su..  |  -.0340528   .0818515    -0.42   0.677    -.1944788    .1263732
+86-88 Human health and soci..  |   .0355247   .0824759     0.43   0.667    -.1261252    .1971745
+90-93 Arts, entertainment a..  |   .0032343    .089502     0.04   0.971    -.1721863    .1786549
+94-96 Other service activit..  |   .0427129   .0777497     0.55   0.583    -.1096736    .1950994
+                        Other  |   .0208704   .0802112     0.26   0.795    -.1363407    .1780816
+                               |
+                 firm_survival |
+   Firm will probably survive  |   .0155667   .0327651     0.48   0.635    -.0486517    .0797851
+      Firm will probably fail  |   .0656823   .0934084     0.70   0.482    -.1173949    .2487595
+               Firm will fail  |  -.1778597   .1292337    -1.38   0.169    -.4311531    .0754336
+                   Don't know  |  -.1140427   .0790636    -1.44   0.149    -.2690046    .0409191
+                               |
+                 survival_time |
+                      1 month  |  -.1177504   .1692703    -0.70   0.487    -.4495141    .2140132
+                     2 months  |  -.2668776    .150256    -1.78   0.076    -.5613739    .0276186
+                   3-4 months  |  -.2808788   .1228121    -2.29   0.022     -.521586   -.0401715
+                   5-6 months  |  -.3914059   .1053748    -3.71   0.000    -.5979368   -.1848751
+                  7-12 months  |  -.3843332   .1144831    -3.36   0.001    -.6087159   -.1599504
+                  > 12 months  |  -.4512415   .1244363    -3.63   0.000    -.6951321   -.2073509
+           No negative impact  |  -.4174179   .1187232    -3.52   0.000    -.6501111   -.1847248
+                   Don't know  |  -.3927667    .100422    -3.91   0.000    -.5895902   -.1959432
+                               |
+                    edu_sector |
+                  Kasvatusala  |   .0112205   .1153889     0.10   0.923    -.2149377    .2373787
+Kauppa ja hallinto (liiket..)  |   .0127219   .0406273     0.31   0.754    -.0669062      .09235
+          Maa- ja metsätalous  |   .0065824   .0616923     0.11   0.915    -.1143323     .127497
+Palvelualat (kauneudenhoito..  |   .0244754   .0821437     0.30   0.766    -.1365233    .1854741
+                  Sosiaaliala  |   .0488269   .1108415     0.44   0.660    -.1684185    .2660723
+         Taiteet ja kulttuuri  |   .0753346   .0702724     1.07   0.284    -.0623969     .213066
+Tekniikka, teollisuus ja ra..  |   .0197296   .0429468     0.46   0.646    -.0644446    .1039037
+       Terveys ja hyvinvointi  |  -.0927232   .0582444    -1.59   0.111    -.2068801    .0214337
+Tietojenkäsittely, tieto- j..  |   .1023725   .0503267     2.03   0.042     .0037339    .2010111
+    Hotelli- ja ravintola-ala  |  -.0285654   .1156042    -0.25   0.805    -.2551454    .1980146
+                   Muu, mikä?  |  -.0092025   .0502156    -0.18   0.855    -.1076233    .0892182
+                    Ei mikään  |   .1274097   .0749854     1.70   0.089    -.0195589    .2743784
+                En osaa sanoa  |   .0362497   .1243556     0.29   0.771    -.2074828    .2799821
+                               |
+                     education |
+         Lukio tai ylioppilas  |  -.0962427   .0579001    -1.66   0.096    -.2097248    .0172393
+        Ammatillinen koulutus  |  -.0583294   .0794297    -0.73   0.463    -.2140086    .0973499
+           Ammattikorkeakoulu  |  -.0217808   .0735494    -0.30   0.767    -.1659349    .1223733
+        Yliopisto/korkeakoulu  |  -.0324513   .0685288    -0.47   0.636    -.1667652    .1018627
+                          Muu  |  -.0531173   .0981108    -0.54   0.588     -.245411    .1391764
+                               |
+                         _cons |   .4968884    .221567     2.24   0.025     .0626251    .9311516
+------------------------------------------------------------------------------------------------
+Instrumented: debt_aversion
+ Instruments: risk_appetite optimism distrust_people distrust_banks 2.n_employees
+              3.n_employees 4.n_employees 5.n_employees 6.n_employees 3.industry 6.industry
+              7.industry 8.industry 9.industry 10.industry 12.industry 13.industry 14.industry
+              17.industry 18.industry 19.industry 22.industry 2.firm_survival 3.firm_survival
+              4.firm_survival 5.firm_survival 2.survival_time 3.survival_time 4.survival_time
+              5.survival_time 6.survival_time 7.survival_time 8.survival_time 9.survival_time
+              2.edu_sector 3.edu_sector 4.edu_sector 5.edu_sector 6.edu_sector 7.edu_sector
+              8.edu_sector 9.edu_sector 10.edu_sector 11.edu_sector 12.edu_sector
+              13.edu_sector 14.edu_sector 2.education 3.education 4.education 5.education
+              6.education debt_avoid debt_divide_large
+
+Linear regression                               Number of obs     =        884
+                                                F(42, 43)         =          .
+                                                Prob > F          =          .
+                                                R-squared         =     0.2473
+                                                Root MSE          =     2.5938
+
+                                            (Std. err. adjusted for 44 clusters in municipality)
+------------------------------------------------------------------------------------------------
+                               |               Robust
+                 debt_aversion | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------------------------+----------------------------------------------------------------
+                 risk_appetite |  -.3198314   .0455142    -7.03   0.000    -.4116196   -.2280432
+                      optimism |   .0734445   .0469511     1.56   0.125    -.0212414    .1681304
+               distrust_people |   .0315603   .0521447     0.61   0.548    -.0735996    .1367202
+                distrust_banks |   .0896859   .0232092     3.86   0.000       .04288    .1364918
+                               |
+                   n_employees |
+                          2–4  |   .1999179     .16759     1.19   0.239    -.1380594    .5378953
+                          5–9  |  -.2580284   .2451015    -1.05   0.298    -.7523227     .236266
+                        10–50  |  -.1097528   .2893682    -0.38   0.706    -.6933195    .4738138
+                       51–250  |  -.1035797    .400722    -0.26   0.797    -.9117126    .7045532
+                         250+  |  -.9648589   .2725574    -3.54   0.001    -1.514523   -.4151946
+                               |
+                      industry |
+          10-33 Manufacturing  |    .034922   .9883458     0.04   0.972    -1.958267    2.028111
+           41-43 Construction  |   -.658488   .9208643    -0.72   0.478    -2.515588    1.198612
+45-47 Wholesale and retail ..  |  -.5455119   .9464514    -0.58   0.567    -2.454213    1.363189
+49-53 Transportation and st..  |  -.0803308   .8733021    -0.09   0.927    -1.841512    1.680851
+55-56 Accommodation and foo..  |  -1.503061   1.095762    -1.37   0.177    -3.712876     .706755
+58-63 Information and commu..  |   .1132764    1.10102     0.10   0.919    -2.107142    2.333694
+    68 Real estate activities  |  -1.132865   .9723528    -1.17   0.250    -3.093801    .8280715
+69-75 Professional, scienti..  |    .055142   .9451377     0.06   0.954     -1.85091    1.961194
+77-82 Administrative and su..  |  -.1924284    1.10394    -0.17   0.862    -2.418736    2.033879
+86-88 Human health and soci..  |  -.3830924   1.045589    -0.37   0.716    -2.491723    1.725538
+90-93 Arts, entertainment a..  |   .7368266   1.091363     0.68   0.503    -1.464117     2.93777
+94-96 Other service activit..  |  -.6514972   .9302666    -0.70   0.487    -2.527559    1.224564
+                        Other  |  -.1637879    .954299    -0.17   0.865    -2.088315    1.760739
+                               |
+                 firm_survival |
+   Firm will probably survive  |   .5464266   .1826128     2.99   0.005     .1781527    .9147005
+      Firm will probably fail  |   .9443158   .5675408     1.66   0.103    -.2002394    2.088871
+               Firm will fail  |  -1.525331   .9495061    -1.61   0.115    -3.440192    .3895307
+                   Don't know  |   .6876407   .6514554     1.06   0.297    -.6261443    2.001426
+                               |
+                 survival_time |
+                      1 month  |  -1.148597    1.06575    -1.08   0.287    -3.297887    1.000692
+                     2 months  |  -1.089112   .6875431    -1.58   0.121    -2.475675    .2974508
+                   3-4 months  |  -1.481612   .7737742    -1.91   0.062    -3.042077    .0788523
+                   5-6 months  |  -1.282579   .5851018    -2.19   0.034    -2.462549   -.1026084
+                  7-12 months  |  -1.515035   .5340283    -2.84   0.007    -2.592006   -.4380646
+                  > 12 months  |  -1.334386   .7874047    -1.69   0.097    -2.922339     .253567
+           No negative impact  |  -1.048965   .8120306    -1.29   0.203    -2.686581    .5886504
+                   Don't know  |  -1.874892   .8301507    -2.26   0.029     -3.54905   -.2007335
+                               |
+                    edu_sector |
+                  Kasvatusala  |   .2617398   .7414509     0.35   0.726    -1.233538    1.757018
+Kauppa ja hallinto (liiket..)  |   .3314474   .4651542     0.71   0.480    -.6066256     1.26952
+          Maa- ja metsätalous  |  -.0016848    .444683    -0.00   0.997    -.8984735    .8951039
+Palvelualat (kauneudenhoito..  |   .6429496   .4742352     1.36   0.182    -.3134369    1.599336
+                  Sosiaaliala  |  -.1414705   .5965024    -0.24   0.814    -1.344432    1.061491
+         Taiteet ja kulttuuri  |    .896867   .7524968     1.19   0.240    -.6206874    2.414421
+Tekniikka, teollisuus ja ra..  |  -.2696132   .4689776    -0.57   0.568    -1.215397    .6761703
+       Terveys ja hyvinvointi  |   .4312362   .5161879     0.84   0.408    -.6097559    1.472228
+Tietojenkäsittely, tieto- j..  |   .6366071   .4773907     1.33   0.189    -.3261431    1.599357
+    Hotelli- ja ravintola-ala  |   .8369383    .856819     0.98   0.334    -.8910019    2.564879
+                   Muu, mikä?  |   .5857111    .373571     1.57   0.124    -.1676666    1.339089
+                    Ei mikään  |  -.5558016   .5551196    -1.00   0.322    -1.675307    .5637037
+                En osaa sanoa  |    .307866   .6626908     0.46   0.645    -1.028577    1.644309
+                               |
+                     education |
+         Lukio tai ylioppilas  |  -.4896496   .5017602    -0.98   0.335    -1.501545    .5222463
+        Ammatillinen koulutus  |  -.0942874   .4246928    -0.22   0.825    -.9507621    .7621872
+           Ammattikorkeakoulu  |   .1540082   .4974062     0.31   0.758     -.849107    1.157123
+        Yliopisto/korkeakoulu  |  -.5791925   .3884546    -1.49   0.143    -1.362586    .2042009
+                          Muu  |  -.5895378    .502024    -1.17   0.247    -1.601966    .4228901
+                               |
+                    debt_avoid |   1.592964   .2066423     7.71   0.000      1.17623    2.009698
+             debt_divide_large |  -1.218461   .2710376    -4.50   0.000     -1.76506   -.6718615
+                         _cons |   8.322615   1.349024     6.17   0.000     5.602049    11.04318
+------------------------------------------------------------------------------------------------
+
+ ( 1)  debt_avoid = 0
+ ( 2)  debt_divide_large = 0
+
+       F(  2,    43) =   34.25
+            Prob > F =    0.0000
+(33 missing values generated)
+
+      Source |       SS           df       MS      Number of obs   =       884
+-------------+----------------------------------   F(53, 830)      =      3.34
+       Model |  20.6117939        53  .388901772   Prob > F        =    0.0000
+    Residual |  96.5318712       830  .116303459   R-squared       =    0.1760
+-------------+----------------------------------   Adj R-squared   =    0.1233
+       Total |  117.143665       883  .132665532   Root MSE        =    .34103
+
+------------------------------------------------------------------------------------------------
+         applied_new_bank_loan | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------------------------+----------------------------------------------------------------
+                     da_hat_ab |  -.0143361   .0137038    -1.05   0.296    -.0412342     .012562
+                 risk_appetite |   .0078206   .0074726     1.05   0.296    -.0068469     .022488
+                      optimism |  -.0086832   .0066608    -1.30   0.193    -.0217572    .0043908
+               distrust_people |   .0041241   .0050721     0.81   0.416    -.0058316    .0140798
+                distrust_banks |   .0052823   .0049088     1.08   0.282    -.0043529    .0149174
+                               |
+                   n_employees |
+                          2–4  |   .0871428   .0313262     2.78   0.006     .0256549    .1486307
+                          5–9  |   .1441157   .0336807     4.28   0.000     .0780064     .210225
+                        10–50  |   .2225954   .0386183     5.76   0.000     .1467945    .2983964
+                       51–250  |   .1355044   .0821738     1.65   0.100    -.0257885    .2967973
+                         250+  |    .329627   .2036562     1.62   0.106    -.0701148    .7293687
+                               |
+                      industry |
+          10-33 Manufacturing  |  -.0211575   .0983608    -0.22   0.830    -.2142227    .1719078
+           41-43 Construction  |  -.0251922   .0990341    -0.25   0.799     -.219579    .1691946
+45-47 Wholesale and retail ..  |  -.0150083   .0944721    -0.16   0.874    -.2004405    .1704239
+49-53 Transportation and st..  |  -.0434813   .1008719    -0.43   0.667    -.2414754    .1545127
+55-56 Accommodation and foo..  |   .0349643   .1037662     0.34   0.736    -.1687107    .2386393
+58-63 Information and commu..  |  -.0051273   .0996311    -0.05   0.959    -.2006858    .1904312
+    68 Real estate activities  |  -.0433226   .1122291    -0.39   0.700    -.2636088    .1769637
+69-75 Professional, scienti..  |   -.034344   .1018826    -0.34   0.736    -.2343219    .1656338
+77-82 Administrative and su..  |  -.0340528   .1084528    -0.31   0.754    -.2469269    .1788213
+86-88 Human health and soci..  |   .0355247   .1068757     0.33   0.740    -.1742538    .2453032
+90-93 Arts, entertainment a..  |   .0032343   .1116991     0.03   0.977    -.2160116    .2224802
+94-96 Other service activit..  |   .0427129   .0930971     0.46   0.646    -.1400204    .2254463
+                        Other  |   .0208704    .094893     0.22   0.826     -.165388    .2071288
+                               |
+                 firm_survival |
+   Firm will probably survive  |   .0155667   .0308152     0.51   0.614    -.0449182    .0760516
+      Firm will probably fail  |   .0656823   .0701721     0.94   0.350    -.0720534    .2034179
+               Firm will fail  |  -.1778597   .1164667    -1.53   0.127    -.4064637    .0507442
+                   Don't know  |  -.1140427    .090262    -1.26   0.207    -.2912113    .0631259
+                               |
+                 survival_time |
+                      1 month  |  -.1177504   .0886114    -1.33   0.184    -.2916792    .0561783
+                     2 months  |  -.2668776   .0802575    -3.33   0.001    -.4244092   -.1093461
+                   3-4 months  |  -.2808788   .0784288    -3.58   0.000     -.434821   -.1269366
+                   5-6 months  |  -.3914059   .0807518    -4.85   0.000    -.5499077   -.2329042
+                  7-12 months  |  -.3843332   .0824473    -4.66   0.000    -.5461628   -.2225035
+                  > 12 months  |  -.4512415   .0811071    -5.56   0.000    -.6104406   -.2920424
+           No negative impact  |  -.4174179   .0815294    -5.12   0.000     -.577446   -.2573899
+                   Don't know  |  -.3927667   .0922776    -4.26   0.000    -.5738917   -.2116417
+                               |
+                    edu_sector |
+                  Kasvatusala  |   .0112205   .1163016     0.10   0.923    -.2170593    .2395003
+Kauppa ja hallinto (liiket..)  |   .0127219   .0720638     0.18   0.860    -.1287268    .1541706
+          Maa- ja metsätalous  |   .0065824    .091252     0.07   0.943    -.1725294    .1856942
+Palvelualat (kauneudenhoito..  |   .0244754   .0836505     0.29   0.770     -.139716    .1886669
+                  Sosiaaliala  |   .0488269   .1231034     0.40   0.692    -.1928038    .2904575
+         Taiteet ja kulttuuri  |   .0753346   .0954507     0.79   0.430    -.1120186    .2626877
+Tekniikka, teollisuus ja ra..  |   .0197296   .0732726     0.27   0.788    -.1240919     .163551
+       Terveys ja hyvinvointi  |  -.0927232   .0915233    -1.01   0.311    -.2723676    .0869212
+Tietojenkäsittely, tieto- j..  |   .1023725   .0884154     1.16   0.247    -.0711716    .2759166
+    Hotelli- ja ravintola-ala  |  -.0285654    .102137    -0.28   0.780    -.2290426    .1719119
+                   Muu, mikä?  |  -.0092025   .0779282    -0.12   0.906    -.1621621     .143757
+                    Ei mikään  |   .1274097   .1054612     1.21   0.227    -.0795923    .3344118
+                En osaa sanoa  |   .0362497   .1908909     0.19   0.849    -.3384359    .4109352
+                               |
+                     education |
+         Lukio tai ylioppilas  |  -.0962427   .0745753    -1.29   0.197    -.2426212    .0501357
+        Ammatillinen koulutus  |  -.0583294   .0695333    -0.84   0.402    -.1948112    .0781525
+           Ammattikorkeakoulu  |  -.0217808   .0693478    -0.31   0.754    -.1578985    .1143369
+        Yliopisto/korkeakoulu  |  -.0324513   .0718572    -0.45   0.652    -.1734945     .108592
+                          Muu  |  -.0531173   .1046785    -0.51   0.612    -.2585829    .1523484
+                               |
+                         _cons |   .4968884   .1995766     2.49   0.013     .1051542    .8886226
+------------------------------------------------------------------------------------------------
+applied_new_bank_loan 2sls by hand: -.01433606
+
+  Tests of overidentifying restrictions:
+
+  Sargan (score) chi2(1) =  1.07383  (p = 0.3001)
+  Basmann chi2(1)        =  1.00825  (p = 0.3153)
+(33 missing values generated)
+
+Linear regression                               Number of obs     =        884
+                                                F(42, 43)         =          .
+                                                Prob > F          =          .
+                                                R-squared         =     0.1772
+                                                Root MSE          =     .34097
+
+                                            (Std. err. adjusted for 44 clusters in municipality)
+------------------------------------------------------------------------------------------------
+                               |               Robust
+         applied_new_bank_loan | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------------------------+----------------------------------------------------------------
+                 debt_aversion |  -.0143361    .015368    -0.93   0.356    -.0453286    .0166565
+                 risk_appetite |   .0078206   .0066351     1.18   0.245    -.0055603    .0212014
+                      optimism |  -.0086832   .0067762    -1.28   0.207    -.0223487    .0049823
+               distrust_people |   .0041241    .005802     0.71   0.481    -.0075767    .0158249
+                distrust_banks |   .0052823   .0042194     1.25   0.217     -.003227    .0137915
+                               |
+                   n_employees |
+                          2–4  |   .0871428   .0417643     2.09   0.043     .0029171    .1713685
+                          5–9  |   .1441157   .0377785     3.81   0.000     .0679282    .2203032
+                        10–50  |   .2225954   .0327669     6.79   0.000     .1565147    .2886762
+                       51–250  |   .1355044   .0816645     1.66   0.104    -.0291877    .3001965
+                         250+  |    .329627    .324131     1.02   0.315    -.3240455    .9832994
+                               |
+                      industry |
+          10-33 Manufacturing  |  -.0211575   .0921384    -0.23   0.819    -.2069724    .1646574
+           41-43 Construction  |  -.0251922   .0956617    -0.26   0.794    -.2181124     .167728
+45-47 Wholesale and retail ..  |  -.0150083   .0849663    -0.18   0.861    -.1863591    .1563426
+49-53 Transportation and st..  |  -.0434813   .0815355    -0.53   0.597    -.2079133    .1209506
+55-56 Accommodation and foo..  |   .0349643   .0964326     0.36   0.719    -.1595105    .2294391
+58-63 Information and commu..  |  -.0051273   .0925924    -0.06   0.956    -.1918577    .1816031
+    68 Real estate activities  |  -.0433226    .101093    -0.43   0.670    -.2471959    .1605508
+69-75 Professional, scienti..  |   -.034344   .0895662    -0.38   0.703    -.2149714    .1462834
+77-82 Administrative and su..  |  -.0340528   .0883769    -0.39   0.702    -.2122818    .1441762
+86-88 Human health and soci..  |   .0355247   .0849713     0.42   0.678    -.1358363    .2068856
+90-93 Arts, entertainment a..  |   .0032343   .0939554     0.03   0.973    -.1862448    .1927134
+94-96 Other service activit..  |   .0427129   .0834795     0.51   0.612    -.1256394    .2110653
+                        Other  |   .0208704   .0856823     0.24   0.809    -.1519243    .1936652
+                               |
+                 firm_survival |
+   Firm will probably survive  |   .0155667   .0344287     0.45   0.653    -.0538654    .0849988
+      Firm will probably fail  |   .0656823   .0981203     0.67   0.507    -.1321961    .2635606
+               Firm will fail  |  -.1778597   .1364223    -1.30   0.199    -.4529816    .0972621
+                   Don't know  |  -.1140427   .0831918    -1.37   0.178    -.2818151    .0537296
+                               |
+                 survival_time |
+                      1 month  |  -.1177504   .1699577    -0.69   0.492    -.4605029     .225002
+                     2 months  |  -.2668776   .1536069    -1.74   0.089    -.5766556    .0429003
+                   3-4 months  |  -.2808788   .1240545    -2.26   0.029    -.5310584   -.0306991
+                   5-6 months  |  -.3914059   .1082353    -3.62   0.001    -.6096832   -.1731287
+                  7-12 months  |  -.3843332    .117607    -3.27   0.002    -.6215102   -.1471561
+                  > 12 months  |  -.4512415   .1254237    -3.60   0.001    -.7041825   -.1983005
+           No negative impact  |   -.417418   .1198857    -3.48   0.001    -.6591906   -.1756454
+                   Don't know  |  -.3927667   .1016777    -3.86   0.000    -.5978194   -.1877141
+                               |
+                    edu_sector |
+                  Kasvatusala  |   .0112205   .1234912     0.09   0.928    -.2378232    .2602642
+Kauppa ja hallinto (liiket..)  |   .0127219   .0415918     0.31   0.761     -.071156    .0965999
+          Maa- ja metsätalous  |   .0065824    .063861     0.10   0.918    -.1222056    .1353703
+Palvelualat (kauneudenhoito..  |   .0244754   .0846877     0.29   0.774    -.1463135    .1952644
+                  Sosiaaliala  |   .0488269   .1134089     0.43   0.669    -.1798841    .2775378
+         Taiteet ja kulttuuri  |   .0753346   .0756562     1.00   0.325    -.0772408    .2279099
+Tekniikka, teollisuus ja ra..  |   .0197296   .0439153     0.45   0.655    -.0688341    .1082932
+       Terveys ja hyvinvointi  |  -.0927232   .0592208    -1.57   0.125    -.2121534     .026707
+Tietojenkäsittely, tieto- j..  |   .1023725   .0517083     1.98   0.054    -.0019072    .2066522
+    Hotelli- ja ravintola-ala  |  -.0285654   .1190701    -0.24   0.812    -.2686932    .2115625
+                   Muu, mikä?  |  -.0092025   .0532412    -0.17   0.864    -.1165736    .0981685
+                    Ei mikään  |   .1274097   .0796318     1.60   0.117     -.033183    .2880025
+                En osaa sanoa  |   .0362497   .1279894     0.28   0.778    -.2218656    .2943649
+                               |
+                     education |
+         Lukio tai ylioppilas  |  -.0962427   .0616002    -1.56   0.126    -.2204713    .0279859
+        Ammatillinen koulutus  |  -.0583294   .0837625    -0.70   0.490    -.2272526    .1105938
+           Ammattikorkeakoulu  |  -.0217808   .0786138    -0.28   0.783    -.1803207     .136759
+        Yliopisto/korkeakoulu  |  -.0324513   .0724925    -0.45   0.657    -.1786464    .1137438
+                          Muu  |  -.0531173   .1027798    -0.52   0.608    -.2603926     .154158
+                               |
+                       vhat_ab |   .0091508   .0162046     0.56   0.575    -.0235289    .0418306
+                         _cons |   .4968884    .226948     2.19   0.034     .0392041    .9545726
+------------------------------------------------------------------------------------------------
+
+  Tests of endogeneity
+  H0: Variables are exogenous
+
+  Durbin (score) chi2(1)          =  .427907  (p = 0.5130)
+  Wu-Hausman F(1,829)             =  .401478  (p = 0.5265)
+
+. 
+. esttab e4_ols_hd e4_iv1_hd e4_iv2_hd ///
+>        e4_ols_ab e4_iv1_ab e4_iv2_ab ///
+>     using "output/ext4_iv.csv", replace keep(debt_aversion) ///
+>     b(3) se(3) star(* 0.10 ** 0.05 *** 0.01) stats(N, fmt(0)) ///
+>     mtitles("Has debt OLS" "Has debt IV1" "Has debt IV2" "Applied OLS" "Applied IV1" "Applied I
+> V2")
+(output written to output/ext4_iv.csv)
+
+. 
+. * first stage, written out (debt aversion on the instruments)
+. esttab e4_fs_hd e4_fs_ab using "output/ext4_first_stage.csv", replace keep(debt_avoid debt_divi
+> de_large) ///
+>     b(3) se(3) star(* 0.10 ** 0.05 *** 0.01) stats(N r2, fmt(0 3)) ///
+>     mtitles("Has debt sample" "Applied sample")
+(output written to output/ext4_first_stage.csv)
+
+. 
+. * iv tests for the report
+. file open ivt using "output/ext4_tests.csv", write replace
+(file output/ext4_tests.csv not found)
+
+. file write ivt "test,has_debt,applied_new_bank_loan" _n
+
+. file write ivt "first stage F one instrument (clustered)," %9.2f (F_fs1_hd) "," %9.2f (F_fs1_ab
+> ) _n
+
+. file write ivt "first stage F two instruments (clustered)," %9.2f (F_fs_hd) "," %9.2f (F_fs_ab)
+>  _n
+
+. file write ivt "first stage p," %9.4f (p_fs_hd) "," %9.4f (p_fs_ab) _n
+
+. file write ivt "overid Sargan chi2(1)," %9.3f (sargan_hd) "," %9.3f (sargan_ab) _n
+
+. file write ivt "overid p," %9.4f (p_sargan_hd) "," %9.4f (p_sargan_ab) _n
+
+. file write ivt "endogeneity t on vhat (clustered)," %9.3f (t_vhat_hd) "," %9.3f (t_vhat_ab) _n
+
+. file write ivt "endogeneity p (clustered)," %9.4f (p_vhat_hd) "," %9.4f (p_vhat_ab) _n
+
+. file write ivt "endogeneity p (Durbin; default SE)," %9.4f (p_durbin_hd) "," %9.4f (p_durbin_ab
+> ) _n
+
+. file close ivt
+
 . 
 . /*--- E5. Differences across groups: Chow-type tests (ch 7) ---*/
 . * H8: the effect of high debt aversion is the same for women and men, and
@@ -3418,7 +4920,6 @@ applied_new_bank_loan turning point of the quadratic: .92153062
 
 . 
 . file open grp using "output/ext5_group_tests.csv", write replace
-(file output/ext5_group_tests.csv not found)
 
 . file write grp "outcome,group,test,stat,df1,df2,p_value" _n
 
@@ -3816,7 +5317,6 @@ applied_new_bank_loan chow test by larger: F = 5.0550114 p = .00004138
 >     keep(high_debt_aversion female hdaXfemale hdaXlarger) ///
 >     b(3) se(3) star(* 0.10 ** 0.05 *** 0.01) stats(N r2, fmt(0 3)) ///
 >     mtitles("Has debt x female" "Has debt x larger" "Applied x female" "Applied x larger")
-(file output/ext5_group_interactions.csv not found)
 (output written to output/ext5_group_interactions.csv)
 
 . 
@@ -3826,7 +5326,6 @@ applied_new_bank_loan chow test by larger: F = 5.0550114 p = .00004138
 > ==============================================================================*/
 . 
 . file open kn using "output/key_numbers.csv", write replace
-(file output/key_numbers.csv not found)
 
 . file write kn "name,value" _n
 
@@ -3859,7 +5358,9 @@ applied_new_bank_loan chow test by larger: F = 5.0550114 p = .00004138
 . foreach t in hd ab {
   2.     file write kn "lpm_fitted_below0_`t'," %9.0f (n_below_`t') _n
   3.     file write kn "lpm_fitted_above1_`t'," %9.0f (n_above_`t') _n
-  4. }
+  4.     file write kn "overid_sargan_`t'," %9.3f (sargan_`t') _n
+  5.     file write kn "overid_p_`t'," %9.4f (p_sargan_`t') _n
+  6. }
 
 . file close kn
 
@@ -3877,7 +5378,6 @@ applied_new_bank_loan chow test by larger: F = 5.0550114 p = .00004138
 >     note("Source: Paaso, Pursiainen and Torstila (2025) survey, 2020. N = 899.")
 
 . graph export "output/fig1_debt_by_score.png", replace width(1600)
-(file output/fig1_debt_by_score.png not found)
 file output/fig1_debt_by_score.png saved as PNG format
 
 . 
@@ -3944,7 +5444,6 @@ Number of observations (_N) was 0, now 11.
 > ality.")
 
 . graph export "output/fig2_score_dummies.png", replace width(1600)
-(file output/fig2_score_dummies.png not found)
 file output/fig2_score_dummies.png saved as PNG format
 
 . restore
@@ -4002,7 +5501,6 @@ file output/fig2_score_dummies.png saved as PNG format
 . label values id idl
 
 . export delimited using "output/fig3_estimates.csv", replace
-(file output/fig3_estimates.csv not found)
 file output/fig3_estimates.csv saved
 
 . twoway (rcap lo hi id, horizontal lcolor(gs8)) ///
@@ -4014,7 +5512,6 @@ file output/fig3_estimates.csv saved
 >     note("Controls and fixed effects as in Table 3A col. (2) and Table 4 col. (2).")
 
 . graph export "output/fig3_estimators.png", replace width(1600)
-(file output/fig3_estimators.png not found)
 file output/fig3_estimators.png saved as PNG format
 
 . restore
@@ -4029,5 +5526,5 @@ file output/fig3_estimators.png saved as PNG format
       name:  <unnamed>
        log:  ECON-5213-Project\output/paaso_replication_output.log
   log type:  text
- closed on:  30 Oct 2026, 15:14:22
+ closed on:   4 Nov 2026, 17:47:22
 -------------------------------------------------------------------------------------------------

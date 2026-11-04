@@ -43,5 +43,9 @@ se_t4_2c,   0.0044
 n_t4_2c,      884
 lpm_fitted_below0_hd,       12
 lpm_fitted_above1_hd,       10
+overid_sargan_hd,    3.765
+overid_p_hd,   0.0523
 lpm_fitted_below0_ab,      142
 lpm_fitted_above1_ab,        0
+overid_sargan_ab,    1.074
+overid_p_ab,   0.3001

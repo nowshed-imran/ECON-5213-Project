@@ -43,7 +43,7 @@
            E1 probit and logit vs the linear probability model     (ch 17)
            E2 heteroskedasticity tests and wls for the lpm         (ch 8)
            E3 functional form of the debt aversion score           (ch 6, 7)
-           E4 measurement error: instrumental variables            (ch 15, final version)
+           E4 measurement error: instrumental variables            (ch 15)
            E5 differences across groups: chow-type tests           (ch 7)
            E6 the 2023 sample with probit                          (ch 17)
         6. key numbers
@@ -453,8 +453,96 @@ esttab e3_dummies_hd e3_dummies_ab ///
 
 /*--- E4. Measurement error: instrumental variables (ch 15) ---*/
 * H7: the survey score measures debt aversion with error, which biases ols
-*     toward zero. this part is added in the final version, after chapter 15
-*     is covered in class.
+*     toward zero. iv uses what the owner was taught about debt as a child
+*     as instruments for the score:
+*       debt_avoid         "should be avoided" (0/1)
+*       debt_divide_large  "useful to split large purchases" (0/1)
+*     they must be correlated with debt aversion (first stage) and affect
+*     debt use only through debt aversion (cannot be tested directly; the
+*     overidentification test checks if the two give the same answer).
+* the steps follow the course file Ch15_Instrumental_Variables.do. the
+* estimates use clustered standard errors like the rest of the project.
+
+foreach y in has_debt applied_new_bank_loan {
+    if "`y'"=="has_debt" local s s_t3_2
+    else local s s_t4_2b
+    if "`y'"=="has_debt" local t hd
+    else local t ab
+
+    * ols estimation
+    eststo e4_ols_`t': reg `y' debt_aversion $controls $fe2_dummies if `s', vce(cluster municipality)
+
+    * 2sls with one instrument
+    eststo e4_iv1_`t': ivregress 2sls `y' (debt_aversion = debt_avoid) $controls $fe2_dummies if `s', vce(cluster municipality) first
+    * first stage with one instrument
+    quietly reg debt_aversion $controls $fe2_dummies debt_avoid if `s', vce(cluster municipality)
+    test debt_avoid
+    scalar F_fs1_`t' = r(F)
+
+    * 2sls with two instruments
+    eststo e4_iv2_`t': ivregress 2sls `y' (debt_aversion = debt_avoid debt_divide_large) $controls $fe2_dummies if `s', vce(cluster municipality) first
+
+    * 2sls - first stage
+    * regression of the endogenous variable debt_aversion on the instruments
+    eststo e4_fs_`t': reg debt_aversion $controls $fe2_dummies debt_avoid debt_divide_large if `s', vce(cluster municipality)
+    * testing whether debt_aversion and the two instruments are correlated
+    test debt_avoid debt_divide_large
+    scalar F_fs_`t' = r(F)
+    scalar p_fs_`t' = r(p)
+    * predicted values for da_hat
+    predict da_hat_`t' if `s', xb
+
+    * 2sls - second stage
+    * replace debt_aversion with its predicted value da_hat
+    reg `y' da_hat_`t' $controls $fe2_dummies if `s'
+    * coefficients are correct but the standard errors are not correct
+    display "`y' 2sls by hand: " _b[da_hat_`t']
+
+    * testing for over-identifying restrictions (estat overid needs the
+    * default standard errors, as in the course file)
+    quietly ivregress 2sls `y' (debt_aversion = debt_avoid debt_divide_large) $controls $fe2_dummies if `s'
+    estat overid
+    scalar sargan_`t' = r(sargan)
+    scalar p_sargan_`t' = r(p_sargan)
+
+    * testing for endogeneity of debt_aversion
+    * estimate reduced form model for debt_aversion and predict the residuals vhat
+    quietly reg debt_aversion $controls $fe2_dummies debt_avoid debt_divide_large if `s'
+    predict vhat_`t' if `s', residual
+    * structural equation that includes the residuals vhat
+    * h0: coefficient on vhat = 0 (exogeneity), h1: coefficient on vhat ne 0 (endogeneity)
+    reg `y' debt_aversion $controls $fe2_dummies vhat_`t' if `s', vce(cluster municipality)
+    scalar t_vhat_`t' = _b[vhat_`t']/_se[vhat_`t']
+    scalar p_vhat_`t' = 2*ttail(e(df_r), abs(t_vhat_`t'))
+    * the same test from stata after 2sls with the default standard errors
+    quietly ivregress 2sls `y' (debt_aversion = debt_avoid debt_divide_large) $controls $fe2_dummies if `s'
+    estat endogenous
+    scalar p_durbin_`t' = r(p_durbin)
+}
+
+esttab e4_ols_hd e4_iv1_hd e4_iv2_hd ///
+       e4_ols_ab e4_iv1_ab e4_iv2_ab ///
+    using "output/ext4_iv.csv", replace keep(debt_aversion) ///
+    b(3) se(3) star(* 0.10 ** 0.05 *** 0.01) stats(N, fmt(0)) ///
+    mtitles("Has debt OLS" "Has debt IV1" "Has debt IV2" "Applied OLS" "Applied IV1" "Applied IV2")
+
+* first stage, written out (debt aversion on the instruments)
+esttab e4_fs_hd e4_fs_ab using "output/ext4_first_stage.csv", replace keep(debt_avoid debt_divide_large) ///
+    b(3) se(3) star(* 0.10 ** 0.05 *** 0.01) stats(N r2, fmt(0 3)) ///
+    mtitles("Has debt sample" "Applied sample")
+
+* iv tests for the report
+file open ivt using "output/ext4_tests.csv", write replace
+file write ivt "test,has_debt,applied_new_bank_loan" _n
+file write ivt "first stage F one instrument (clustered)," %9.2f (F_fs1_hd) "," %9.2f (F_fs1_ab) _n
+file write ivt "first stage F two instruments (clustered)," %9.2f (F_fs_hd) "," %9.2f (F_fs_ab) _n
+file write ivt "first stage p," %9.4f (p_fs_hd) "," %9.4f (p_fs_ab) _n
+file write ivt "overid Sargan chi2(1)," %9.3f (sargan_hd) "," %9.3f (sargan_ab) _n
+file write ivt "overid p," %9.4f (p_sargan_hd) "," %9.4f (p_sargan_ab) _n
+file write ivt "endogeneity t on vhat (clustered)," %9.3f (t_vhat_hd) "," %9.3f (t_vhat_ab) _n
+file write ivt "endogeneity p (clustered)," %9.4f (p_vhat_hd) "," %9.4f (p_vhat_ab) _n
+file write ivt "endogeneity p (Durbin; default SE)," %9.4f (p_durbin_hd) "," %9.4f (p_durbin_ab) _n
+file close ivt
 
 /*--- E5. Differences across groups: Chow-type tests (ch 7) ---*/
 * H8: the effect of high debt aversion is the same for women and men, and
@@ -527,6 +615,8 @@ foreach m in t3_1a t3_1b t3_2a t3_2b t3_3a t3_3b t3_4a t3_4b t4_1a t4_1b t4_1c t
 foreach t in hd ab {
     file write kn "lpm_fitted_below0_`t'," %9.0f (n_below_`t') _n
     file write kn "lpm_fitted_above1_`t'," %9.0f (n_above_`t') _n
+    file write kn "overid_sargan_`t'," %9.3f (sargan_`t') _n
+    file write kn "overid_p_`t'," %9.4f (p_sargan_`t') _n
 }
 file close kn
 
