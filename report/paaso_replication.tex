@@ -8,14 +8,14 @@
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage[hidelinks]{hyperref}
-\hypersetup{pdftitle={Entrepreneur Debt Aversion and Bank Borrowing: A Replication of Paaso, Pursiainen and Torstila (2025)},pdfauthor={Nowshed Hossain Imran}}
+\hypersetup{pdftitle={Entrepreneur Debt Aversion and Bank Borrowing: A Replication of Paaso, Pursiainen and Torstila (2026)},pdfauthor={Nowshed Hossain Imran}}
 
 % Notes printed under a table or figure
 \newenvironment{tablenotes}{\par\vspace{3pt}\begin{minipage}{0.95\linewidth}\footnotesize\textit{Note:} }{\end{minipage}}
 \newenvironment{figurenotes}{\par\vspace{3pt}\begin{minipage}{0.95\linewidth}\footnotesize\textit{Note:} }{\end{minipage}}
 
 % Footer on the first page
-\myfooter[L]{Replication paper, ECON 5213 Econometric Analysis, Oklahoma State University, in progress, October 2026}
+\myfooter[L]{Replication paper, ECON 5213 Econometric Analysis, Oklahoma State University, December 2026}
 
 \begin{document}
 \setlength{\emergencystretch}{2em}
@@ -27,7 +27,7 @@
 
 \begin{frontmatter}
 
-\title{Entrepreneur Debt Aversion and Bank Borrowing: A Replication of Paaso, Pursiainen and Torstila (2025)}
+\title{Entrepreneur Debt Aversion and Bank Borrowing: A Replication of Paaso, Pursiainen and Torstila (2026)}
 
 \author{Nowshed Hossain Imran}
 \affiliation{organization={Spears School of Business, Oklahoma State University},
@@ -36,7 +36,7 @@
              country={USA}}
 
 \begin{abstract}
-Paaso, Pursiainen and Torstila (2025) survey 917 Finnish owner-managers in 2020 and find that entrepreneurs who dislike debt run firms that use less of it, and were less likely to apply for a bank loan during COVID-19. I replicate their Tables 1, 3A, 4 and 10A with the authors' survey data and my own Stata code. High debt aversion lowers the probability of having debt by 0.093 (clustered standard error 0.027), against 0.094 (0.030) in the paper, and every coefficient in Tables 3A, 4 and 10A is within 0.001 of the paper's. The extension tests the assumptions behind these linear probability models; this version reports five of the six tests, and the instrumental variables test for measurement error is added in the final version. The debt use result survives probit and logit (average partial effect $-0.094$), weighted least squares ($-0.062$), score dummies and the 2023 survey ($-0.196$). However, the bank loan result is weaker: it is $-0.046$ with $p = 0.053$ in the paper's model, and it is not significant in the logit. The score works more like a threshold at 7 and above than a straight line. Debt aversion is a reliable predictor of debt use, and a less reliable one of loan applications.
+Paaso, Pursiainen and Torstila (2026) survey 917 Finnish owner-managers in 2020 and find that entrepreneurs who dislike debt run firms that use less of it, and were less likely to apply for a bank loan during COVID-19. I replicate their Tables 1, 3A, 4 and 10A with the authors' survey data and my own Stata code. High debt aversion lowers the probability of having debt by 0.093 (clustered standard error 0.027), against 0.094 (0.030) in the paper, and every coefficient in Tables 3A, 4 and 10A is within 0.001 of the paper's. The extension tests six assumptions behind these linear probability models. The debt use result survives probit and logit (average partial effect $-0.094$), weighted least squares ($-0.062$), score dummies, instrumental variables and the 2023 survey ($-0.196$). However, the bank loan result is weaker: it is $-0.046$ with $p = 0.053$ in the paper's model, and it is not significant in the logit. The score works more like a threshold at 7 and above than a straight line. Debt aversion is a reliable predictor of debt use, and a less reliable one of loan applications.
 \end{abstract}
 
 \begin{keyword}
@@ -48,23 +48,23 @@ Debt aversion \sep Small business finance \sep Linear probability model \sep Rep
 
 \section{Introduction}
 
-When COVID-19 closed much of Europe in spring 2020, governments offered small firms loans backed by state guarantees. Many firms that needed cash did not take them. Paaso, Pursiainen and Torstila (2025) ask whether part of the reason sits in the owner's head. Corporate finance theory treats debt as a neutral tool, but many people see borrowing as something shameful or dangerous, and the owner of a small firm is the one who decides whether the firm borrows. If owners who dislike debt avoid it even when the firm needs money, then policies built on loans will reach fewer firms than planned.
+When COVID-19 closed much of Europe in spring 2020, governments offered small firms loans backed by state guarantees. Many firms that needed cash did not take them. Paaso, Pursiainen and Torstila (2026) ask whether part of the reason sits in the owner's head. Corporate finance theory treats debt as a neutral tool, but many people see borrowing as something shameful or dangerous, and the owner of a small firm is the one who decides whether the firm borrows. If owners who dislike debt avoid it even when the firm needs money, then policies built on loans will reach fewer firms than planned.
 
-I ask two questions. The first is whether I can reproduce the paper's main estimates with my own code. The second is whether the estimates hold when the assumptions of the linear probability model are tested. I follow the cross-section workflow in Wooldridge (2020): I estimate the paper's models by ordinary least squares with clustered standard errors, compare them with probit and logit, test for heteroskedasticity and estimate weighted least squares, test the functional form of the debt aversion score, and test whether the effect differs across groups of owners. The instrumental variables test for measurement error in the score is added in the final version, after chapter 15 is covered in class.
+I ask two questions. The first is whether I can reproduce the paper's main estimates with my own code. The second is whether the estimates hold when the assumptions of the linear probability model are tested. I follow the cross-section workflow in Wooldridge (2020): I estimate the paper's models by ordinary least squares with clustered standard errors, compare them with probit and logit, test for heteroskedasticity and estimate weighted least squares, test the functional form of the debt aversion score, use instrumental variables for measurement error in the score, and test whether the effect differs across groups of owners.
 
-The replication works. Every coefficient in Tables 3A, 4 and 10A of the paper is reproduced to within 0.001. The debt use result also holds in every test of the extension reported here. However, the bank loan result is weaker than the paper suggests, it depends on the estimator and is significant at the 5 percent level only under weighted least squares.
+The replication works. Every coefficient in Tables 3A, 4 and 10A of the paper is reproduced to within 0.001. The debt use result also holds in every test of the extension. However, the bank loan result is weaker than the paper suggests, it depends on the estimator and is significant at the 5 percent level only under weighted least squares.
 
 \section{Original Study and Mechanism}
 
 The paper studies 917 Finnish firms whose survey respondent is also the owner. The key variable is the owner's answer, on a scale from 0 (disagree completely) to 10 (agree completely), to the statement ``I consider taking on debt to be unpleasant.'' Owners who answer 8, 9 or 10 are coded as having high debt aversion, which is about 45 percent of the sample. The outcomes are whether the firm has debt now, whether it had debt in the past five years, and whether it applied for a new bank loan during the COVID-19 crisis.
 
-The mechanism is a preference, not a constraint. A debt-averse owner gets a personal cost from borrowing that a profit-maximizing firm would not have, so the owner borrows less at any interest rate. The COVID-19 shock helps the argument. The Finnish support for small firms ran mainly through bank loans with a government guarantee of 50 to 80 percent, and the shock came suddenly to most firms at the same time. Thus a debt-averse owner could not have chosen in advance a firm with low financing needs.
+The paper argues that the mechanism is a preference, not a constraint. A debt-averse owner gets a personal cost from borrowing that a profit-maximizing firm would not have, so the owner borrows less at any interest rate. The COVID-19 shock helps the argument. The Finnish support for small firms ran mainly through bank loans with a government guarantee of 50 to 80 percent, and the shock came suddenly to most firms at the same time. Thus a debt-averse owner could not have chosen in advance a firm with low financing needs.
 
 The main threat is that debt aversion is not randomly assigned. An owner who had a bad experience with debt, or whose firm is riskier, may both dislike debt and borrow less for reasons the survey does not record. The paper answers this with controls for risk appetite, optimism and trust, with fixed effects for firm and owner characteristics, and with a survey experiment that labels the same support policy as a loan or as a grant. I replicate the regression part and leave the experiment aside. The paper reports that high debt aversion lowers the probability of having debt by about 9 percentage points against a base rate of 48 percent.
 
 \section{Data}
 
-The data are the authors' own survey, run by TNS Kantar between 27 May and 8 June 2020 among members of the Federation of Finnish Enterprises and firms in the Bisnode Finland database. Of the 1,008 firms that answered, the authors keep the 917 whose respondent is an owner-manager. The cleaned survey file comes from the paper's replication package at the journal (Paaso et al. 2025), and the authors agreed to its use for this extension. The license does not allow the data to be shared, so the data files are not in the project repository. The package also contains a 2023 follow-up survey of 1,041 firms, which the paper uses in Table 10.
+The data are the authors' own survey, run by TNS Kantar between 27 May and 8 June 2020 among members of the Federation of Finnish Enterprises and firms in the Bisnode Finland database. Of the 1,008 firms that answered, the authors keep the 917 whose respondent is an owner-manager. The cleaned survey file comes from the paper's replication package at the journal (Paaso et al. 2026), and the authors agreed to its use for this extension. The license does not allow the data to be shared, so the data files are not in the project repository. The package also contains a 2023 follow-up survey of 1,041 firms, which the paper uses in Table 10.
 
 The unit of observation is a firm, and the sample is one cross-section. Most firms are small: 38.6 percent have one employee and 2.6 percent have more than 50. Table~\ref{tab:summary} shows the main variables. My means and standard deviations are the same as the paper's Table 1 to the third decimal for every variable I checked, which means the cleaned file is the one the authors used. The paper's Table 3B uses debt ratios from the Orbis database, and those variables were removed from the package for license reasons, so Table 3B cannot be replicated.
 
@@ -125,14 +125,15 @@ The extension asks whether the estimates depend on the assumptions of the linear
 \item H4. The effect of high debt aversion is the same in a probit or logit model as in the linear model.
 \item H5. The errors of the linear model are homoskedastic, and weighted least squares gives the same effect.
 \item H6. The effect of the 0 to 10 score is linear.
-\item H7. The score is measured without error, so ordinary least squares is not biased toward zero (instrumental variables; added in the final version).
+\item H7. The score is measured without error, so ordinary least squares is not biased toward zero.
 \item H8. The effect of high debt aversion is the same for women and men, and for firms with fewer than 5 employees and larger firms.
 \item H9. In the 2023 survey, the effect is the same in a probit or logit model as in the linear model.
 \end{itemize}
 
 For H4 and H9, a linear probability model can give fitted values below 0 or above 1, and it assumes the effect is the same for every firm. Probit and logit avoid both, and I compare their average partial effects with $\beta_1$ (Wooldridge 2020). For H5, the variance of a 0/1 outcome is $p(\mathbf{x})[1 - p(\mathbf{x})]$, so the errors of the linear model must be heteroskedastic. I run the Breusch-Pagan test and the special form of the White test, then estimate weighted least squares with $h_i = \hat{y}_i(1 - \hat{y}_i)$ and keep the clustered standard errors. Fitted values outside 0 and 1 are set to 0.01 and 0.99.
 
-For H6, I replace the score with ten dummies for each value and test the nine restrictions that make the dummies a straight line, $\beta_k = k\,\beta_1$ for $k = 2$ to 10. I also add a squared score and run the RESET test. For H8, I interact high debt aversion with a female indicator and with a larger-firm indicator and test the interaction, and I also run a Chow test that compares the model in each group with the pooled model.
+For H6, I replace the score with ten dummies for each value and test the nine restrictions that make the dummies a straight line, $\beta_k = k\,\beta_1$ for $k = 2$ to 10. I also add a squared score and run the RESET test. For H7, a single survey question measures an attitude with error, and classical measurement error biases the coefficient toward zero. The survey also asks what the owner was taught about debt as a child. I use two answers, that debt should be avoided and that large purchases should be paid for in parts, as instruments for the score and estimate the model by two stage least squares. I report the first stage, the Sargan test of the overidentifying restriction, and a test of endogeneity that adds the residuals of the first stage to the OLS model and tests whether their coefficient is zero. For H8, I interact high debt aversion with a female indicator and with a larger-firm indicator and test the interaction, and I also run a Chow test that compares the model in each group with the pooled model.
+% E4 will be aligned with Dr. Sun's Ch15 do-file when it is shared.
 
 \section{Replication Results}
 
@@ -204,7 +205,7 @@ Linear probability models. Columns (2), (3), (5) and (6) also control for optimi
 
 In the 2023 survey the paper uses heteroskedasticity-robust standard errors and dummies for industry, firm size and legal form. High debt aversion lowers the probability of having debt by 22.8 points without the dummies and 19.6 points with them, both with a standard error of about 0.03, and the score lowers it by 5.1 and 4.4 points per unit. The effect is about twice as large as in 2020. H3 is supported.
 
-Table~\ref{tab:benchmark} sets my estimates beside the paper's. All 18 coefficients agree to the third decimal or differ by 0.001. My sample in the models with dummies has 884 firms against the paper's 883, and some of my clustered standard errors are smaller in the third decimal, the largest gap is 0.020 against 0.025 in column (6) of Table 3A. I could not find which firm makes the difference. A likely reason is the way the paper's fixed effects command drops singletons and counts degrees of freedom, which my \texttt{reg} code can follow only approximately.
+Table~\ref{tab:benchmark} sets my estimates beside the paper's. All 18 coefficients agree to the third decimal or differ by 0.001. My sample in the models with dummies has 884 firms against the paper's 883, and some of my clustered standard errors are smaller in the third decimal, the largest gap is 0.020 against 0.025 in column (6) of Table 3A. I could not find which firm makes the difference. My \texttt{reg} code keeps every firm with complete answers, while the paper's fixed effects command drops a firm that is the only one in its category. No such firm exists in the 2020 data, so this does not explain the gap there, but in 2023 it adds one firm to column (2) and two to column (4) of Table 10A.
 
 \begin{table}[!htbp]
 \centering\small\setlength{\tabcolsep}{4pt}
@@ -234,7 +235,7 @@ Table and column & Variable & Paper & Replication \\
 10A (4) Has debt, 2023 & Score & $-0.044$ (0.005) & $-0.044$ (0.005) \\
 \midrule
 Sample, 2020 & & 883 with dummies & 884 with dummies \\
-Sample, 2023 & & 1,022 in column (2) & 1,022 in column (2) \\
+Sample, 2023 & & 1,022 in column (2) & 1,023 in column (2) \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
@@ -266,11 +267,11 @@ Has debt, 2023 & $-0.196^{***}$ & $-0.196^{***}$ & $-0.195^{***}$ & \\
 \midrule
 $N$, has debt 2020 & 884 & 881 & 881 & 884 \\
 $N$, bank loan 2020 & 884 & 884 & 884 & 884 \\
-$N$, has debt 2023 & 1,022 & 1,020 & 1,020 & \\
+$N$, has debt 2023 & 1,023 & 1,020 & 1,020 & \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
-APE is the average partial effect from \texttt{margins, dydx()}. All models include the controls and dummies of column (2) of Table 3A or Table 4 (Table 10A for 2023). Three firms in the 2020 debt model and two in 2023 are dropped by probit and logit because their category predicts the outcome perfectly. Standard errors clustered by municipality (2020) or robust (2023). WLS weights are $1/[\hat{y}(1-\hat{y})]$. $^{*}p<0.10$, $^{**}p<0.05$, $^{***}p<0.01$. Source: \texttt{output/ext1\_probit\_logit.csv}, \texttt{output/ext2\_wls.csv}, \texttt{output/ext6\_2023\_probit\_logit.csv}, \texttt{output/key\_numbers.csv}.
+APE is the average partial effect from \texttt{margins, dydx()}. All models include the controls and dummies of column (2) of Table 3A or Table 4 (Table 10A for 2023). Three firms in the 2020 debt model and three in 2023 are dropped by probit and logit because their category predicts the outcome perfectly. Standard errors clustered by municipality (2020) or robust (2023). WLS weights are $1/[\hat{y}(1-\hat{y})]$. $^{*}p<0.10$, $^{**}p<0.05$, $^{***}p<0.01$. Source: \texttt{output/ext1\_probit\_logit.csv}, \texttt{output/ext2\_wls.csv}, \texttt{output/ext6\_2023\_probit\_logit.csv}, \texttt{output/key\_numbers.csv}.
 \end{tablenotes}
 \end{table}
 
@@ -328,7 +329,36 @@ Coefficients on the score dummies in the model of column (2) of Table 3A, with 9
 
 \subsection{Measurement error: H7}
 
-A single survey question measures an attitude with error, and classical measurement error biases the coefficient on the score toward zero. The survey also asks what the owner was taught about debt as a child, which can serve as instruments for the score. This test is added in the final version of the paper, after instrumental variables are covered in class.
+Table~\ref{tab:iv} reports the instrumental variable estimates. The instruments are strong: an owner who was taught as a child that debt should be avoided reports a score 1.593 points higher, and one who was taught to pay for large purchases in parts reports a score 1.218 points lower, with a first stage $R^2$ of 0.247 and a clustered first stage $F$ of 70.05 with the first instrument alone and 34.25 with both. However, the 2SLS estimates are not larger in magnitude than OLS, as attenuation bias would predict. With both instruments the effect on having debt is $-0.016$ (0.016), against $-0.019$ (0.005) by OLS, and with the first instrument alone it is 0.005 (0.024). The standard errors are three to five times larger than the OLS ones, so the 2SLS estimates are too imprecise to tell apart from either zero or the OLS estimate.
+
+\begin{table}[!htbp]
+\centering\small\setlength{\tabcolsep}{2.5pt}
+\caption{Instrumental Variable Estimates of the Debt Aversion Score}
+\label{tab:iv}
+\begin{tabular}{lcccccc}
+\toprule
+ & \multicolumn{3}{c}{Has debt} & \multicolumn{3}{c}{Applied for bank loan} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+ & OLS & IV, one & IV, two & OLS & IV, one & IV, two \\
+\midrule
+Debt aversion (0 to 10) & $-0.019^{***}$ & 0.005 & $-0.016$ & $-0.006$ & $-0.006$ & $-0.014$ \\
+ & (0.005) & (0.024) & (0.016) & (0.004) & (0.020) & (0.014) \\
+\midrule
+Sargan $\chi^2(1)$ & & & 3.765 [0.052] & & & 1.074 [0.300] \\
+Endogeneity $t$ & & & $-0.198$ [0.844] & & & 0.565 [0.575] \\
+$N$ & 884 & 884 & 884 & 884 & 884 & 884 \\
+\midrule
+\multicolumn{7}{l}{First stage (dependent variable: debt aversion score)} \\
+Taught debt should be avoided & \multicolumn{6}{c}{$1.593^{***}$ (0.207)} \\
+Taught to pay large purchases in parts & \multicolumn{6}{c}{$-1.218^{***}$ (0.271)} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+``IV, one'' uses only the first instrument and ``IV, two'' uses both. All models include the controls and dummies of column (2) of Table 3A. Clustered standard errors in parentheses, $p$-values in brackets. Sargan is the overidentification test, run with default standard errors as Stata's test requires. Endogeneity $t$ is the clustered $t$ statistic on the first stage residual added to the OLS model. Source: \texttt{output/ext4\_iv.csv}, \texttt{output/ext4\_first\_stage.csv}, \texttt{output/ext4\_tests.csv}.
+\end{tablenotes}
+\end{table}
+
+The endogeneity test does not reject that the score is exogenous ($p = 0.844$ for having debt and 0.575 for the bank loan), and Stata's Durbin test after 2SLS gives the same answer ($p = 0.846$ and 0.513), so OLS is preferred, being consistent and much more precise. The overidentification test is not rejected at 5 percent, but for having debt the $p$-value of 0.052 is close, and the two instruments give quite different estimates. The two lessons from childhood may affect borrowing through other channels, such as financial knowledge, and not only through the attitude. Thus I find no evidence for H7's alternative of attenuation bias, but the instruments are not good enough to rule it out.
 
 \subsection{Differences across groups: H8}
 
@@ -364,11 +394,11 @@ Larger firm means 5 or more employees. Its main effect is absorbed by the firm s
 
 \subsection{Limitations}
 
-The data are one survey at one point in time, and debt aversion, the outcomes and the traits are all reported by the owner. An owner who has avoided debt for years may say afterward that debt is unpleasant, so the direction of the effect cannot be settled with this design, and the paper's survey experiment, which I do not replicate, is its main answer to that concern. The sample is Finnish and from a single crisis, where support came through banks, so the effect may be different where support came as grants. The paper's Table 3B cannot be replicated because the Orbis ratios were removed from the package. With 44 clusters the clustered standard errors are reliable but not exact, and the RESET test shows the linear probability model is not a perfect fit for the bank loan. Finally, one author's funding came in part from a foundation linked to a Finnish bank group, which I note for completeness; it does not change any number here.
+The data are one survey at one point in time, and debt aversion, the outcomes and the traits are all reported by the owner. The survey also measures the owner's attitude toward debt, not whether a bank would have lent to each owner. An owner who has avoided debt for years may say afterward that debt is unpleasant, so the direction of the effect cannot be settled with this design, and the paper's survey experiment, which I do not replicate, is its main answer to that concern. The instruments are also answers from the same survey, and their exclusion restriction is open to doubt. The sample is Finnish and from a single crisis, where support came through banks, so the effect may be different where support came as grants. The paper's Table 3B cannot be replicated because the Orbis ratios were removed from the package. With 44 clusters the clustered standard errors are reliable but not exact, and the RESET test shows the linear probability model is not a perfect fit for the bank loan. Finally, one author's funding came in part from a foundation linked to a Finnish bank group, which I note for completeness; it does not change any number here.
 
 \subsection{Conclusion}
 
-I replicate the main results of Paaso, Pursiainen and Torstila (2025) with the authors' survey data and my own Stata code. Owners with high debt aversion are 9.3 percentage points less likely to have debt, against 9.4 in the paper, and all 18 coefficients I compare match the paper to within 0.001. The extension shows the debt use result is strong. It is the same in probit and logit, it survives weighted least squares at a smaller size, it is not driven by group differences, and it is twice as large in the 2023 survey. The score behaves like a threshold at 7 and above, which supports the paper's use of an indicator.
+I replicate the main results of Paaso, Pursiainen and Torstila (2026) with the authors' survey data and my own Stata code. Owners with high debt aversion are 9.3 percentage points less likely to have debt, against 9.4 in the paper, and all 18 coefficients I compare match the paper to within 0.001. The extension shows the debt use result is strong. It is the same in probit and logit, it survives weighted least squares at a smaller size, it is not driven by group differences, and it is twice as large in the 2023 survey. The score behaves like a threshold at 7 and above, which supports the paper's use of an indicator.
 
 However, the result on bank loan applications during COVID-19, which is the one most relevant for policy, is weaker. It is significant only at the 10 percent level in the paper's model, it is not significant in the logit, and the linear model predicts negative probabilities for 142 firms. A next step would be to estimate the loan decision only for firms that faced a large sales shock, where the need for credit is clearest, and to use the 2023 survey's question on loans and grants.
 
@@ -376,7 +406,7 @@ The coefficients in a paper tell us what the data say only after the assumptions
 
 \begin{thebibliography}{00}
 
-\bibitem[Paaso et al.(2025)]{paaso2025} Paaso, Mikael, Vesa Pursiainen, and Sami Torstila. 2025. Entrepreneur debt aversion and financing decisions: Evidence from COVID-19 support programs. \textit{Management Science} 72 (5), 4474-4498. Replication data at \url{https://doi.org/10.1287/mnsc.2022.03007}.
+\bibitem[Paaso et al.(2026)]{paaso2025} Paaso, Mikael, Vesa Pursiainen, and Sami Torstila. 2026. Entrepreneur debt aversion and financing decisions: Evidence from COVID-19 support programs. \textit{Management Science} 72 (5), 4474-4498. Replication data at \url{https://doi.org/10.1287/mnsc.2022.03007}.
 
 \bibitem[Wooldridge(2020)]{wooldridge} Wooldridge, Jeffrey M. 2020. \textit{Introductory Econometrics: A Modern Approach}. 7th ed. Boston: Cengage.
 

@@ -2,12 +2,15 @@
       name:  <unnamed>
        log:  ECON-5213-Project\output/paaso_replication_output.log
   log type:  text
- opened on:   4 Nov 2026, 17:46:41
+ opened on:  15 Nov 2026, 19:09:25
 
 . 
 . 
 . /*==============================================================================
 >     0. CHECK THAT THE DATA FILES ARE IN PLACE
+>     The two survey files come from the replication package of Paaso,
+>     Pursiainen and Torstila (2026), available on the paper's page:
+>     https://doi.org/10.1287/mnsc.2022.03007
 > ==============================================================================*/
 . 
 . foreach f in "data/raw/paaso/cleaned_survey.dta" "data/raw/paaso/2023_cleaned_survey.dta" {
@@ -548,46 +551,13 @@ unpaid_wages |         0          0          0          0          0
 . esttab using "output/table1_summary_stats.csv", replace ///
 >     cells("mean(fmt(3)) sd(fmt(3)) p10(fmt(3)) p50(fmt(3)) p90(fmt(3)) count(fmt(0))") ///
 >     noobs nonumber nomtitle label
+(file output/table1_summary_stats.csv not found)
 (output written to output/table1_summary_stats.csv)
 
 . 
 . 
 . /*==============================================================================
->     3. ESTIMATION SAMPLE FOR THE FIXED EFFECTS REGRESSIONS
->     the paper uses reghdfe, which drops "singletons": a firm that is the only
->     one in its category of some fixed effect. its dummy fits that firm exactly,
->     so the firm adds nothing to the estimate. to get the same sample with -reg-
->     and dummy variables, i mark the estimation sample and drop singletons
->     until none are left.
-> ==============================================================================*/
-. 
-. capture program drop mark_sample
-
-. program define mark_sample
-  1.     syntax varlist, fe(varlist) gen(name)
-  2.     marksample touse
-  3.     markout `touse' `fe'
-  4.     local more 1
-  5.     while `more' {
-  6.         local more 0
-  7.         foreach f of local fe {
-  8.             tempvar n
-  9.             quietly bysort `touse' `f': gen `n' = _N if `touse'
- 10.             quietly count if `touse' & `n'==1
- 11.             if r(N) > 0 {
- 12.                 quietly replace `touse' = 0 if `n'==1
- 13.                 local more 1
- 14.             }
- 15.             drop `n'
- 16.         }
- 17.     }
- 18.     gen byte `gen' = `touse'
- 19. end
-
-. 
-. 
-. /*==============================================================================
->     4. REPLICATION
+>     3. REPLICATION
 >     Question: do entrepreneurs with higher debt aversion use less debt, and
 >     were they less likely to apply for a bank loan during COVID-19?
 >     Model: linear probability model (OLS on a 0/1 outcome)
@@ -606,9 +576,9 @@ unpaid_wages |         0          0          0          0          0
   4.         * without controls or fixed effects
 .         eststo t3_`i'a: reg `y' `x', vce(cluster municipality)
   5.         * with controls and fixed effects
-.         mark_sample `y' `x' $controls municipality, fe($fe2) gen(s_t3_`i')
-  6.         eststo t3_`i'b: reg `y' `x' $controls $fe2_dummies if s_t3_`i', vce(cluster municipa
-> lity)
+.         eststo t3_`i'b: reg `y' `x' $controls $fe2_dummies, vce(cluster municipality)
+  6.         * keep the estimation sample for the extension
+.         generate byte s_t3_`i' = e(sample)
   7.     }
   8. }
 
@@ -1000,6 +970,7 @@ Tietojenkäsittely, tieto- j..  |  -.0025688   .1043296    -0.02   0.980    -.21
 >     b(3) se(3) star(* 0.10 ** 0.05 *** 0.01) stats(N r2, fmt(0 3)) ///
 >     mtitles("Has debt" "Has debt" "Has debt" "Has debt" ///
 >             "Had debt 5y" "Had debt 5y" "Had debt 5y" "Had debt 5y") label
+(file output/table3a_debt_use.csv not found)
 (output written to output/table3a_debt_use.csv)
 
 . 
@@ -1014,12 +985,10 @@ Tietojenkäsittely, tieto- j..  |  -.0025688   .1043296    -0.02   0.980    -.21
 . foreach x in high_debt_aversion debt_aversion {
   2.     local i = `i' + 1
   3.     eststo t4_`i'a: reg `y' `x', vce(cluster municipality)
-  4.     mark_sample `y' `x' $controls municipality, fe($fe2) gen(s_t4_`i'b)
-  5.     eststo t4_`i'b: reg `y' `x' $controls $fe2_dummies if s_t4_`i'b, vce(cluster municipalit
-> y)
-  6.     mark_sample `y' `x' $controls municipality, fe($fe3) gen(s_t4_`i'c)
-  7.     eststo t4_`i'c: reg `y' `x' $controls $fe3_dummies if s_t4_`i'c, vce(cluster municipalit
-> y)
+  4.     eststo t4_`i'b: reg `y' `x' $controls $fe2_dummies, vce(cluster municipality)
+  5.     generate byte s_t4_`i'b = e(sample)
+  6.     eststo t4_`i'c: reg `y' `x' $controls $fe3_dummies, vce(cluster municipality)
+  7.     generate byte s_t4_`i'c = e(sample)
   8. }
 
 Linear regression                               Number of obs     =        899
@@ -1410,6 +1379,7 @@ Tietojenkäsittely, tieto- j..  |      .0895   .0533658     1.68   0.101    -.01
 >     keep(high_debt_aversion debt_aversion $controls) ///
 >     b(3) se(3) star(* 0.10 ** 0.05 *** 0.01) stats(N r2, fmt(0 3)) ///
 >     nomtitles label
+(file output/table4_new_bank_loan.csv not found)
 (output written to output/table4_new_bank_loan.csv)
 
 . 
@@ -1451,45 +1421,45 @@ high_debt_aversion |  -.2278618   .0295966    -7.70   0.000    -.2859388   -.169
              _cons |         .5   .0211495    23.64   0.000     .4584985    .5415015
 ------------------------------------------------------------------------------------
 
-. mark_sample isdebt high_debt_aversion, fe(d_industry d_n_empl d_orgform) gen(s_t10_2)
+. eststo t10_2: reg isdebt high_debt_aversion i.d_industry i.d_n_empl i.d_orgform, vce(robust)
 
-. eststo t10_2: reg isdebt high_debt_aversion i.d_industry i.d_n_empl i.d_orgform if s_t10_2, vce
-> (robust)
-
-Linear regression                               Number of obs     =      1,022
-                                                F(15, 1006)       =      16.60
-                                                Prob > F          =     0.0000
-                                                R-squared         =     0.1549
+Linear regression                               Number of obs     =      1,023
+                                                F(15, 1006)       =          .
+                                                Prob > F          =          .
+                                                R-squared         =     0.1555
                                                 Root MSE          =     .45339
 
 ------------------------------------------------------------------------------------------------
                                |               Robust
                         isdebt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------------------------+----------------------------------------------------------------
-            high_debt_aversion |  -.1957357   .0290376    -6.74   0.000    -.2527169   -.1387545
+            high_debt_aversion |  -.1957357   .0290518    -6.74   0.000    -.2527447   -.1387267
                                |
                     d_industry |
-Kauppa (tukkukauppa tai vä..)  |   .0110516   .0601949     0.18   0.854    -.1070703    .1291736
-                 Rakentaminen  |  -.1173657   .0658297    -1.78   0.075     -.246545    .0118135
-         Asiantuntijapalvelut  |  -.2094867   .0552104    -3.79   0.000    -.3178274    -.101146
-                Muut palvelut  |  -.0579703   .0537568    -1.08   0.281    -.1634586    .0475179
-                En osaa sanoa  |  -.0148478   .1345793    -0.11   0.912     -.278936    .2492405
+Kauppa (tukkukauppa tai vä..)  |   .0110516   .0602243     0.18   0.854    -.1071281    .1292314
+                 Rakentaminen  |  -.1173657   .0658619    -1.78   0.075    -.2466082    .0118767
+         Asiantuntijapalvelut  |  -.2094867   .0552374    -3.79   0.000    -.3178804    -.101093
+                Muut palvelut  |  -.0579703   .0537831    -1.08   0.281    -.1635102    .0475695
+                En osaa sanoa  |  -.0148478   .1346451    -0.11   0.912    -.2790652    .2493697
                                |
                       d_n_empl |
-                 2-4 henkilöä  |   .1440768   .0388117     3.71   0.000     .0679157    .2202379
-                 5-9 henkilöä  |   .2158304   .0531627     4.06   0.000      .111508    .3201529
-               10-19 henkilöä  |   .3217135   .0603408     5.33   0.000     .2033051    .4401218
-      20 henkilöä tai enemmän  |   .3475514   .0760128     4.57   0.000     .1983896    .4967132
+                 2-4 henkilöä  |   .1440768   .0388307     3.71   0.000     .0678784    .2202752
+                 5-9 henkilöä  |   .2158304   .0531887     4.06   0.000     .1114569    .3202039
+               10-19 henkilöä  |   .3217135   .0603704     5.33   0.000     .2032472    .4401797
+      20 henkilöä tai enemmän  |   .3475514     .07605     4.57   0.000     .1983166    .4967861
+                En osaa sanoa  |  -.2551915   .1047264    -2.44   0.015    -.4606987   -.0496844
                                |
                      d_orgform |
-                  Avoin yhtiö  |   .0422552   .0991623     0.43   0.670    -.1523335     .236844
-            Kommandiittiyhtiö  |  -.0788415   .0676469    -1.17   0.244    -.2115867    .0539037
-Toiminimi (sisältää pelkäl..)  |   .0007206   .0377655     0.02   0.985    -.0733877    .0748288
-                   Osuuskunta  |  -.1397185   .1521247    -0.92   0.359    -.4382366    .1587995
-                En osaa sanoa  |  -.3323654    .109992    -3.02   0.003    -.5482055   -.1165254
+                  Avoin yhtiö  |   .0422552   .0992108     0.43   0.670    -.1524287    .2369392
+            Kommandiittiyhtiö  |  -.0788415     .06768    -1.16   0.244    -.2116516    .0539686
+Toiminimi (sisältää pelkäl..)  |   .0007206    .037784     0.02   0.985    -.0734239    .0748651
+                   Osuuskunta  |  -.1397185   .1521991    -0.92   0.359    -.4383826    .1589455
+                En osaa sanoa  |  -.3323654   .1100458    -3.02   0.003    -.5483111   -.1164198
                                |
-                         _cons |   .4666423   .0600842     7.77   0.000     .3487377     .584547
+                         _cons |   .4666423   .0601135     7.76   0.000       .34868    .5846046
 ------------------------------------------------------------------------------------------------
+
+. generate byte s_t10_2 = e(sample)
 
 . eststo t10_3: reg isdebt debt_aversion, vce(robust)
 
@@ -1507,57 +1477,62 @@ debt_aversion |   -.051377   .0052845    -9.72   0.000    -.0617467   -.0410072
         _cons |   .7358919   .0393235    18.71   0.000      .658727    .8130569
 -------------------------------------------------------------------------------
 
-. mark_sample isdebt debt_aversion, fe(d_industry d_n_empl d_orgform) gen(s_t10_4)
+. eststo t10_4: reg isdebt debt_aversion i.d_industry i.d_n_empl i.d_orgform, vce(robust)
 
-. eststo t10_4: reg isdebt debt_aversion i.d_industry i.d_n_empl i.d_orgform if s_t10_4, vce(robu
-> st)
-
-Linear regression                               Number of obs     =      1,012
-                                                F(14, 997)        =      17.87
-                                                Prob > F          =     0.0000
-                                                R-squared         =     0.1725
+Linear regression                               Number of obs     =      1,014
+                                                F(14, 997)        =          .
+                                                Prob > F          =          .
+                                                R-squared         =     0.1736
                                                 Root MSE          =     .44901
 
 ------------------------------------------------------------------------------------------------
                                |               Robust
                         isdebt | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
 -------------------------------+----------------------------------------------------------------
-                 debt_aversion |  -.0441673   .0054061    -8.17   0.000     -.054776   -.0335586
+                 debt_aversion |  -.0441673   .0054115    -8.16   0.000    -.0547865   -.0335481
                                |
                     d_industry |
-Kauppa (tukkukauppa tai vä..)  |   .0124925   .0593817     0.21   0.833    -.1040351      .12902
-                 Rakentaminen  |  -.1227752   .0648565    -1.89   0.059    -.2500461    .0044957
-         Asiantuntijapalvelut  |  -.2113104   .0543764    -3.89   0.000    -.3180157   -.1046051
-                Muut palvelut  |  -.0731656   .0532893    -1.37   0.170    -.1777377    .0314066
-                En osaa sanoa  |  -.0114455   .1403189    -0.08   0.935    -.2867998    .2639087
+Kauppa (tukkukauppa tai vä..)  |   .0124925   .0594404     0.21   0.834    -.1041502    .1291351
+                 Rakentaminen  |  -.1227752   .0649206    -1.89   0.059    -.2501718    .0046214
+         Asiantuntijapalvelut  |  -.2113104   .0544301    -3.88   0.000    -.3181211   -.1044997
+                Muut palvelut  |  -.0731656    .053342    -1.37   0.170     -.177841    .0315099
+                En osaa sanoa  |  -.0114455   .1404575    -0.08   0.935    -.2870717    .2641807
                                |
                       d_n_empl |
-                 2-4 henkilöä  |   .1354031    .038677     3.50   0.000     .0595055    .2113007
-                 5-9 henkilöä  |   .2028621   .0527345     3.85   0.000     .0993787    .3063455
-               10-19 henkilöä  |   .3014882    .059748     5.05   0.000      .184242    .4187344
-      20 henkilöä tai enemmän  |   .3137069   .0768219     4.08   0.000     .1629558    .4644581
+                 2-4 henkilöä  |   .1354031   .0387152     3.50   0.000     .0594305    .2113757
+                 5-9 henkilöä  |   .2028621   .0527866     3.84   0.000     .0992765    .3064477
+               10-19 henkilöä  |   .3014882    .059807     5.04   0.000     .1841262    .4188502
+      20 henkilöä tai enemmän  |   .3137069   .0768978     4.08   0.000     .1628069     .464607
+                En osaa sanoa  |  -.2748266    .106572    -2.58   0.010    -.4839577   -.0656954
                                |
                      d_orgform |
-                  Avoin yhtiö  |   .0666364   .1022504     0.65   0.515    -.1340143     .267287
-            Kommandiittiyhtiö  |  -.0806936    .065368    -1.23   0.217    -.2089683    .0475811
-Toiminimi (sisältää pelkäl..)  |   .0105146   .0374661     0.28   0.779    -.0630068     .084036
-                   Osuuskunta  |  -.1233573   .1403337    -0.88   0.380    -.3987407    .1520261
+                  Avoin yhtiö  |   .0666364   .1023514     0.65   0.515    -.1342125    .2674852
+            Kommandiittiyhtiö  |  -.0806936   .0654326    -1.23   0.218     -.209095    .0477078
+Toiminimi (sisältää pelkäl..)  |   .0105146   .0375031     0.28   0.779    -.0630794    .0841086
+                   Osuuskunta  |  -.1233573   .1404723    -0.88   0.380    -.3990127    .1522981
+                En osaa sanoa  |  -.2523575   .0373087    -6.76   0.000      -.32557    -.179145
                                |
-                         _cons |   .6788616   .0701214     9.68   0.000     .5412592     .816464
+                         _cons |   .6788616   .0701906     9.67   0.000     .5411233    .8165999
 ------------------------------------------------------------------------------------------------
+
+. generate byte s_t10_4 = e(sample)
 
 . 
 . esttab t10_1 t10_2 t10_3 t10_4 using "output/table10a_2023_sample.csv", replace ///
 >     keep(high_debt_aversion debt_aversion) ///
 >     b(3) se(3) star(* 0.10 ** 0.05 *** 0.01) stats(N r2, fmt(0 3)) nomtitles label
+(file output/table10a_2023_sample.csv not found)
 (output written to output/table10a_2023_sample.csv)
 
 . 
-. /*--- E6 belongs here because it uses the 2023 file (see section 5) ---*/
+. /*--- E6 belongs here because it uses the 2023 file (see section 4) ---*/
 . * H9: in 2023 the effect of high debt aversion is the same in a probit or
 . *     logit as in the lpm.
 . * probit with the same fixed effects, average partial effect of high aversion
 . probit isdebt i.high_debt_aversion i.d_industry i.d_n_empl i.d_orgform if s_t10_2, vce(robust)
+
+note: 6.d_n_empl != 0 predicts failure perfectly;
+      6.d_n_empl omitted and 1 obs not used.
 
 note: 6.d_orgform != 0 predicts failure perfectly;
       6.d_orgform omitted and 2 obs not used.
@@ -1590,6 +1565,7 @@ Kauppa (tukkukauppa tai vä..)  |   .0248068   .1647181     0.15   0.880    -.29
                  5-9 henkilöä  |   .6028842   .1485328     4.06   0.000     .3117653    .8940032
                10-19 henkilöä  |   .8890369   .1729272     5.14   0.000     .5501058    1.227968
       20 henkilöä tai enemmän  |   .9872132   .2296247     4.30   0.000      .537157    1.437269
+                En osaa sanoa  |          0  (empty)
                                |
                      d_orgform |
                   Avoin yhtiö  |   .1283647   .2693885     0.48   0.634     -.399627    .6563564
@@ -1618,6 +1594,9 @@ dy/dx wrt:  1.high_debt_aversion
 Note: dy/dx for factor levels is the discrete change from the base level.
 
 . logit isdebt i.high_debt_aversion i.d_industry i.d_n_empl i.d_orgform if s_t10_2, vce(robust)
+
+note: 6.d_n_empl != 0 predicts failure perfectly;
+      6.d_n_empl omitted and 1 obs not used.
 
 note: 6.d_orgform != 0 predicts failure perfectly;
       6.d_orgform omitted and 2 obs not used.
@@ -1651,6 +1630,7 @@ Kauppa (tukkukauppa tai vä..)  |   .0467912   .2717733     0.17   0.863    -.48
                  5-9 henkilöä  |   .9937628   .2450177     4.06   0.000      .513537    1.473989
                10-19 henkilöä  |    1.47139   .2882246     5.11   0.000     .9064805      2.0363
       20 henkilöä tai enemmän  |   1.604018   .3893137     4.12   0.000     .8409775    2.367059
+                En osaa sanoa  |          0  (empty)
                                |
                      d_orgform |
                   Avoin yhtiö  |   .2089747   .4546769     0.46   0.646    -.6821756    1.100125
@@ -1682,6 +1662,7 @@ Note: dy/dx for factor levels is the discrete change from the base level.
 >     keep(high_debt_aversion 1.high_debt_aversion) ///
 >     b(3) se(3) star(* 0.10 ** 0.05 *** 0.01) stats(N, fmt(0)) ///
 >     mtitles("LPM" "Probit APE" "Logit APE")
+(file output/ext6_2023_probit_logit.csv not found)
 (output written to output/ext6_2023_probit_logit.csv)
 
 . restore
@@ -1689,7 +1670,7 @@ Note: dy/dx for factor levels is the discrete change from the base level.
 . 
 . 
 . /*==============================================================================
->     5. EXTENSION
+>     4. EXTENSION
 >     the paper uses only linear probability models with clustered errors.
 >     each test below checks one assumption behind those estimates.
 >     main specifications: table 3a column (2) for has_debt (sample s_t3_1)
@@ -2303,6 +2284,7 @@ Note: dy/dx for factor levels is the discrete change from the base level.
 >     b(3) se(3) star(* 0.10 ** 0.05 *** 0.01) stats(N, fmt(0)) ///
 >     mtitles("Has debt LPM" "Has debt Probit" "Has debt Logit" ///
 >             "Applied LPM" "Applied Probit" "Applied Logit")
+(file output/ext1_probit_logit.csv not found)
 (output written to output/ext1_probit_logit.csv)
 
 . 
@@ -2311,6 +2293,7 @@ Note: dy/dx for factor levels is the discrete change from the base level.
 . *     so this should fail. then estimate wls with h = yhat(1-yhat).
 . 
 . file open het using "output/ext2_heteroskedasticity.csv", write replace
+(file output/ext2_heteroskedasticity.csv not found)
 
 . file write het "outcome,test,stat,df1,df2,p_value" _n
 
@@ -2395,19 +2378,19 @@ White's test
 H0: Homoskedasticity
 Ha: Unrestricted heteroskedasticity
 
-  chi2(821) = 814.78
-Prob > chi2 = 0.5546
+  chi2(820) = 814.78
+Prob > chi2 = 0.5449
 
 Cameron & Trivedi's decomposition of IM-test
 
 --------------------------------------------------
               Source |       chi2     df         p
 ---------------------+----------------------------
-  Heteroskedasticity |     814.78    821    0.5546
+  Heteroskedasticity |     814.78    820    0.5449
             Skewness |     189.36     53    0.0000
             Kurtosis |     138.85      1    0.0000
 ---------------------+----------------------------
-               Total |    1143.00    875    0.0000
+               Total |    1142.99    874    0.0000
 --------------------------------------------------
 (33 missing values generated)
 (14 real changes made)
@@ -2594,19 +2577,19 @@ White's test
 H0: Homoskedasticity
 Ha: Unrestricted heteroskedasticity
 
-  chi2(821) = 843.65
-Prob > chi2 = 0.2842
+  chi2(820) = 843.65
+Prob > chi2 = 0.2759
 
 Cameron & Trivedi's decomposition of IM-test
 
 --------------------------------------------------
               Source |       chi2     df         p
 ---------------------+----------------------------
-  Heteroskedasticity |     843.65    821    0.2842
+  Heteroskedasticity |     843.65    820    0.2759
             Skewness |     312.51     53    0.0000
             Kurtosis |      78.29      1    0.0000
 ---------------------+----------------------------
-               Total |    1234.45    875    0.0000
+               Total |    1234.45    874    0.0000
 --------------------------------------------------
 (33 missing values generated)
 (158 real changes made)
@@ -2781,6 +2764,7 @@ Tietojenkäsittely, tieto- j..  |    .047664   .0187415     2.54   0.015     .00
 >     using "output/ext2_wls.csv", replace keep(high_debt_aversion) ///
 >     b(3) se(3) star(* 0.10 ** 0.05 *** 0.01) stats(N, fmt(0)) ///
 >     mtitles("Has debt OLS" "Has debt WLS" "Applied OLS" "Applied WLS")
+(file output/ext2_wls.csv not found)
 (output written to output/ext2_wls.csv)
 
 . 
@@ -2789,6 +2773,7 @@ Tietojenkäsittely, tieto- j..  |    .047664   .0187415     2.54   0.015     .00
 . *     every score (most flexible), a quadratic, and the reset test.
 . 
 . file open ff using "output/ext3_functional_form.csv", write replace
+(file output/ext3_functional_form.csv not found)
 
 . file write ff "outcome,test,stat,df1,df2,p_value" _n
 
@@ -3381,6 +3366,7 @@ applied_new_bank_loan turning point of the quadratic: .92153062
 >     keep(*.debt_aversion debt_aversion da_sq) ///
 >     b(3) se(3) star(* 0.10 ** 0.05 *** 0.01) stats(N r2, fmt(0 3)) ///
 >     mtitles("Has debt dummies" "Applied dummies" "Has debt quadratic" "Applied quadratic")
+(file output/ext3_score_dummies_quadratic.csv not found)
 (output written to output/ext3_score_dummies_quadratic.csv)
 
 . 
@@ -4865,6 +4851,7 @@ Tietojenkäsittely, tieto- j..  |   .1023725   .0517083     1.98   0.054    -.00
 >     b(3) se(3) star(* 0.10 ** 0.05 *** 0.01) stats(N, fmt(0)) ///
 >     mtitles("Has debt OLS" "Has debt IV1" "Has debt IV2" "Applied OLS" "Applied IV1" "Applied I
 > V2")
+(file output/ext4_iv.csv not found)
 (output written to output/ext4_iv.csv)
 
 . 
@@ -4873,6 +4860,7 @@ Tietojenkäsittely, tieto- j..  |   .1023725   .0517083     1.98   0.054    -.00
 > de_large) ///
 >     b(3) se(3) star(* 0.10 ** 0.05 *** 0.01) stats(N r2, fmt(0 3)) ///
 >     mtitles("Has debt sample" "Applied sample")
+(file output/ext4_first_stage.csv not found)
 (output written to output/ext4_first_stage.csv)
 
 . 
@@ -4920,6 +4908,7 @@ Tietojenkäsittely, tieto- j..  |   .1023725   .0517083     1.98   0.054    -.00
 
 . 
 . file open grp using "output/ext5_group_tests.csv", write replace
+(file output/ext5_group_tests.csv not found)
 
 . file write grp "outcome,group,test,stat,df1,df2,p_value" _n
 
@@ -5317,15 +5306,17 @@ applied_new_bank_loan chow test by larger: F = 5.0550114 p = .00004138
 >     keep(high_debt_aversion female hdaXfemale hdaXlarger) ///
 >     b(3) se(3) star(* 0.10 ** 0.05 *** 0.01) stats(N r2, fmt(0 3)) ///
 >     mtitles("Has debt x female" "Has debt x larger" "Applied x female" "Applied x larger")
+(file output/ext5_group_interactions.csv not found)
 (output written to output/ext5_group_interactions.csv)
 
 . 
 . 
 . /*==============================================================================
->     6. KEY NUMBERS FOR THE REPORT
+>     5. KEY NUMBERS FOR THE REPORT
 > ==============================================================================*/
 . 
 . file open kn using "output/key_numbers.csv", write replace
+(file output/key_numbers.csv not found)
 
 . file write kn "name,value" _n
 
@@ -5367,7 +5358,7 @@ applied_new_bank_loan chow test by larger: F = 5.0550114 p = .00004138
 . 
 . 
 . /*==============================================================================
->     7. FIGURES FOR THE REPORT
+>     6. FIGURES FOR THE REPORT
 > ==============================================================================*/
 . 
 . /*--- Figure 1: share of firms with debt at each debt aversion score ---*/
@@ -5375,9 +5366,10 @@ applied_new_bank_loan chow test by larger: F = 5.0550114 p = .00004138
 >     ytitle("Share of firms with debt") ///
 >     b1title("Debt aversion score (0 to 10)") ///
 >     title("Debt use by debt aversion score") ///
->     note("Source: Paaso, Pursiainen and Torstila (2025) survey, 2020. N = 899.")
+>     note("Source: Paaso, Pursiainen and Torstila (2026) survey, 2020. N = 899.")
 
 . graph export "output/fig1_debt_by_score.png", replace width(1600)
+(file output/fig1_debt_by_score.png not found)
 file output/fig1_debt_by_score.png saved as PNG format
 
 . 
@@ -5444,6 +5436,7 @@ Number of observations (_N) was 0, now 11.
 > ality.")
 
 . graph export "output/fig2_score_dummies.png", replace width(1600)
+(file output/fig2_score_dummies.png not found)
 file output/fig2_score_dummies.png saved as PNG format
 
 . restore
@@ -5501,6 +5494,7 @@ file output/fig2_score_dummies.png saved as PNG format
 . label values id idl
 
 . export delimited using "output/fig3_estimates.csv", replace
+(file output/fig3_estimates.csv not found)
 file output/fig3_estimates.csv saved
 
 . twoway (rcap lo hi id, horizontal lcolor(gs8)) ///
@@ -5512,6 +5506,7 @@ file output/fig3_estimates.csv saved
 >     note("Controls and fixed effects as in Table 3A col. (2) and Table 4 col. (2).")
 
 . graph export "output/fig3_estimators.png", replace width(1600)
+(file output/fig3_estimators.png not found)
 file output/fig3_estimators.png saved as PNG format
 
 . restore
@@ -5526,5 +5521,5 @@ file output/fig3_estimators.png saved as PNG format
       name:  <unnamed>
        log:  ECON-5213-Project\output/paaso_replication_output.log
   log type:  text
- closed on:   4 Nov 2026, 17:47:22
+ closed on:  15 Nov 2026, 19:10:07
 -------------------------------------------------------------------------------------------------

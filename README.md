@@ -1,15 +1,15 @@
-# Entrepreneur Debt Aversion and Bank Borrowing: A Replication of Paaso, Pursiainen and Torstila (2025)
+# Entrepreneur Debt Aversion and Bank Borrowing: A Replication of Paaso, Pursiainen and Torstila (2026)
 
 Replication paper for ECON 5213 Econometric Analysis, Oklahoma State University (Fall 2026).
 
-Status: in progress (November 4, 2026). The code and output now cover the replication and all six extension tests. The report still covers five of the six; the instrumental variables part (H7) is added to it with the final report, due December 10, 2026. See Project status below.
+Status: full report (November 15, 2026). The code, output and report now cover the replication and all six extension tests. The final paper is due December 10, 2026. See Project status below.
 
-Paaso, Pursiainen and Torstila (2025) survey 917 Finnish owner-managers in 2020 and find that owners who dislike debt run firms that use less of it, and were less likely to apply for a bank loan during COVID-19. This project replicates their Tables 1, 3A, 4 and 10A with the authors' survey data and my own Stata code, then tests the assumptions behind their linear probability models. The full write-up is in `report/paaso_replication.pdf`.
+Paaso, Pursiainen and Torstila (2026) survey 917 Finnish owner-managers in 2020 and find that owners who dislike debt run firms that use less of it, and were less likely to apply for a bank loan during COVID-19. This project replicates their Tables 1, 3A, 4 and 10A with the authors' survey data and my own Stata code, then tests the assumptions behind their linear probability models. The full write-up is in `report/paaso_replication.pdf`.
 
 ## Main results
 
 - Replication: high debt aversion lowers the probability of having debt by 0.093 (clustered standard error 0.027), against 0.094 (0.030) in the paper. All 18 coefficients in Tables 3A, 4 and 10A are within 0.001 of the paper's. The 2020 sample with dummies has 884 firms against the paper's 883, and some clustered standard errors are smaller in the third decimal.
-- Extension: the debt use result holds under probit and logit (average partial effect of 0.094), weighted least squares (0.062), score dummies and the 2023 survey (0.196). The bank loan result is weaker. It is 0.046 with p = 0.053 in the paper's model, not significant in the logit, and the linear model predicts negative probabilities for 142 firms. The 0 to 10 score works more like a threshold at 7 and above than a straight line.
+- Extension: the debt use result holds under probit and logit (average partial effect of 0.094), weighted least squares (0.062), score dummies, instrumental variables and the 2023 survey (0.196). The bank loan result is weaker. It is 0.046 with p = 0.053 in the paper's model, not significant in the logit, and the linear model predicts negative probabilities for 142 firms. The 0 to 10 score works more like a threshold at 7 and above than a straight line.
 
 ## Hypotheses
 
@@ -24,13 +24,13 @@ Extension (assumptions of the linear probability model):
 - H4. The effect is the same in probit and logit as in the linear model.
 - H5. The errors are homoskedastic, and weighted least squares gives the same effect.
 - H6. The effect of the 0 to 10 score is linear.
-- H7. The score is measured without error (instrumental variables). In the code and output now; in the report with the final version.
+- H7. The score is measured without error (instrumental variables).
 - H8. The effect is the same for women and men, and for small and larger firms.
 - H9. In the 2023 survey, the effect is the same in probit and logit as in the linear model.
 
 ## Method in brief
 
-The paper's model is a linear probability model of a 0/1 outcome on a high debt aversion indicator (score of 8 or more), four traits (risk appetite, optimism, distrust of people, distrust of banks) and dummies for firm size, industry, expected survival, survival time and the owner's education. The paper absorbs the dummies with `reghdfe`; I include them directly with `reg y x i.var`, drop singletons as the paper does, and cluster standard errors by municipality (44 clusters). I read the authors' specifications but did not run or copy their code.
+The paper's model is a linear probability model of a 0/1 outcome on a high debt aversion indicator (score of 8 or more), four traits (risk appetite, optimism, distrust of people, distrust of banks) and dummies for firm size, industry, expected survival, survival time and the owner's education. The paper absorbs the dummies with `reghdfe`; I include them directly with `reg y x i.var` and cluster standard errors by municipality (44 clusters). I read the authors' specifications but did not run or copy their code.
 
 The extension follows the cross-section chapters of Wooldridge's *Introductory Econometrics*: probit and logit with average partial effects (chapter 17), Breusch-Pagan and special White tests and WLS for the linear probability model (chapter 8), score dummies, a squared term and RESET (chapters 6 and 7), two stage least squares with childhood lessons about debt as instruments, with the first stage, the Sargan overidentification test and a test of endogeneity (chapter 15), and interactions with Chow tests (chapter 7).
 
@@ -66,9 +66,9 @@ The data are the authors' survey from the Management Science replication package
 | `output/key_numbers.csv` | Benchmark table, fitted values outside 0 and 1, Sargan test |
 | `output/ext1_probit_logit.csv`, `output/ext2_wls.csv`, `output/ext6_2023_probit_logit.csv` | Table 5 (estimators) |
 | `output/ext2_heteroskedasticity.csv`, `output/ext3_functional_form.csv` | Table 6 (specification tests) |
-| `output/ext3_score_dummies_quadratic.csv` | Figure 2 and Section 6.2 |
-| `output/ext4_iv.csv`, `output/ext4_first_stage.csv`, `output/ext4_tests.csv` | Instrumental variables (H7); added to the report with the final version |
-| `output/ext5_group_interactions.csv`, `output/ext5_group_tests.csv` | Table 7 (groups) |
+| `output/ext3_score_dummies_quadratic.csv` | Figure 3 and Section 6.2 |
+| `output/ext4_iv.csv`, `output/ext4_first_stage.csv`, `output/ext4_tests.csv` | Table 7 (instrumental variables) |
+| `output/ext5_group_interactions.csv`, `output/ext5_group_tests.csv` | Table 8 (groups) |
 | `output/fig1_debt_by_score.png`, `output/fig2_score_dummies.png`, `output/fig3_estimators.png` | Figures 1 to 3 |
 | `output/paaso_replication_output.log` | Full Stata log |
 
@@ -78,7 +78,7 @@ The data are the authors' survey from the Management Science replication package
 | :--- | :--- |
 | Replication of Tables 1, 3A, 4 and 10A, with the benchmark against the paper | Done |
 | E1 probit and logit (H4), E2 heteroskedasticity and WLS (H5), E3 functional form (H6), E5 groups (H8), E6 the 2023 survey (H9) | Done |
-| E4 instrumental variables for measurement error (H7) | Code and output done; added to the report with the final version |
+| E4 instrumental variables for measurement error (H7) | Done |
 | Course presentation | December 1 or 3, 2026 |
 | Final paper and code | December 10, 2026 |
 

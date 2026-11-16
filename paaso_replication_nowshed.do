@@ -4,7 +4,7 @@
     Submitted by: Nowshed Hossain Imran
 
     Paper replicated:
-        Paaso, Mikael, Vesa Pursiainen, and Sami Torstila. 2025. "Entrepreneur
+        Paaso, Mikael, Vesa Pursiainen, and Sami Torstila. 2026. "Entrepreneur
         Debt Aversion and Financing Decisions: Evidence from COVID-19 Support
         Programs." Management Science 72 (5): 4474-4498.
     Target exhibits: Table 1, Table 3 Panel A, Table 4 and Table 10 Panel A
@@ -37,17 +37,16 @@
         0. check files
         1. the data
         2. table 1: summary statistics
-        3. estimation sample (singletons)
-        4. replication: table 3 panel a, table 4, table 10 panel a
-        5. extension
+        3. replication: table 3 panel a, table 4, table 10 panel a
+        4. extension
            E1 probit and logit vs the linear probability model     (ch 17)
            E2 heteroskedasticity tests and wls for the lpm         (ch 8)
            E3 functional form of the debt aversion score           (ch 6, 7)
            E4 measurement error: instrumental variables            (ch 15)
            E5 differences across groups: chow-type tests           (ch 7)
            E6 the 2023 sample with probit                          (ch 17)
-        6. key numbers
-        7. figures for the report
+        5. key numbers
+        6. figures for the report
 
 *******************************************************************************/
 
@@ -62,7 +61,7 @@ log using "output/paaso_replication_output.log", text replace
 /*==============================================================================
     0. CHECK THAT THE DATA FILES ARE IN PLACE
     The two survey files come from the replication package of Paaso,
-    Pursiainen and Torstila (2025), available on the paper's page:
+    Pursiainen and Torstila (2026), available on the paper's page:
     https://doi.org/10.1287/mnsc.2022.03007
 ==============================================================================*/
 
@@ -158,39 +157,7 @@ esttab using "output/table1_summary_stats.csv", replace ///
 
 
 /*==============================================================================
-    3. ESTIMATION SAMPLE FOR THE FIXED EFFECTS REGRESSIONS
-    the paper uses reghdfe, which drops "singletons": a firm that is the only
-    one in its category of some fixed effect. its dummy fits that firm exactly,
-    so the firm adds nothing to the estimate. to get the same sample with -reg-
-    and dummy variables, i mark the estimation sample and drop singletons
-    until none are left.
-==============================================================================*/
-
-capture program drop mark_sample
-program define mark_sample
-    syntax varlist, fe(varlist) gen(name)
-    marksample touse
-    markout `touse' `fe'
-    local more 1
-    while `more' {
-        local more 0
-        foreach f of local fe {
-            tempvar n
-            quietly bysort `touse' `f': gen `n' = _N if `touse'
-            quietly count if `touse' & `n'==1
-            if r(N) > 0 {
-                quietly replace `touse' = 0 if `n'==1
-                local more 1
-            }
-            drop `n'
-        }
-    }
-    gen byte `gen' = `touse'
-end
-
-
-/*==============================================================================
-    4. REPLICATION
+    3. REPLICATION
     Question: do entrepreneurs with higher debt aversion use less debt, and
     were they less likely to apply for a bank loan during COVID-19?
     Model: linear probability model (OLS on a 0/1 outcome)
@@ -208,8 +175,9 @@ foreach y in has_debt had_debt_5y {
         * without controls or fixed effects
         eststo t3_`i'a: reg `y' `x', vce(cluster municipality)
         * with controls and fixed effects
-        mark_sample `y' `x' $controls municipality, fe($fe2) gen(s_t3_`i')
-        eststo t3_`i'b: reg `y' `x' $controls $fe2_dummies if s_t3_`i', vce(cluster municipality)
+        eststo t3_`i'b: reg `y' `x' $controls $fe2_dummies, vce(cluster municipality)
+        * keep the estimation sample for the extension
+        generate byte s_t3_`i' = e(sample)
     }
 }
 
@@ -230,10 +198,10 @@ local i = 0
 foreach x in high_debt_aversion debt_aversion {
     local i = `i' + 1
     eststo t4_`i'a: reg `y' `x', vce(cluster municipality)
-    mark_sample `y' `x' $controls municipality, fe($fe2) gen(s_t4_`i'b)
-    eststo t4_`i'b: reg `y' `x' $controls $fe2_dummies if s_t4_`i'b, vce(cluster municipality)
-    mark_sample `y' `x' $controls municipality, fe($fe3) gen(s_t4_`i'c)
-    eststo t4_`i'c: reg `y' `x' $controls $fe3_dummies if s_t4_`i'c, vce(cluster municipality)
+    eststo t4_`i'b: reg `y' `x' $controls $fe2_dummies, vce(cluster municipality)
+    generate byte s_t4_`i'b = e(sample)
+    eststo t4_`i'c: reg `y' `x' $controls $fe3_dummies, vce(cluster municipality)
+    generate byte s_t4_`i'c = e(sample)
 }
 
 esttab t4_1a t4_1b t4_1c t4_2a t4_2b t4_2c ///
@@ -257,17 +225,17 @@ label variable debt_aversion "Debt aversion (0 to 10)"
 label variable high_debt_aversion "High debt aversion (0/1)"
 
 eststo t10_1: reg isdebt high_debt_aversion, vce(robust)
-mark_sample isdebt high_debt_aversion, fe(d_industry d_n_empl d_orgform) gen(s_t10_2)
-eststo t10_2: reg isdebt high_debt_aversion i.d_industry i.d_n_empl i.d_orgform if s_t10_2, vce(robust)
+eststo t10_2: reg isdebt high_debt_aversion i.d_industry i.d_n_empl i.d_orgform, vce(robust)
+generate byte s_t10_2 = e(sample)
 eststo t10_3: reg isdebt debt_aversion, vce(robust)
-mark_sample isdebt debt_aversion, fe(d_industry d_n_empl d_orgform) gen(s_t10_4)
-eststo t10_4: reg isdebt debt_aversion i.d_industry i.d_n_empl i.d_orgform if s_t10_4, vce(robust)
+eststo t10_4: reg isdebt debt_aversion i.d_industry i.d_n_empl i.d_orgform, vce(robust)
+generate byte s_t10_4 = e(sample)
 
 esttab t10_1 t10_2 t10_3 t10_4 using "output/table10a_2023_sample.csv", replace ///
     keep(high_debt_aversion debt_aversion) ///
     b(3) se(3) star(* 0.10 ** 0.05 *** 0.01) stats(N r2, fmt(0 3)) nomtitles label
 
-/*--- E6 belongs here because it uses the 2023 file (see section 5) ---*/
+/*--- E6 belongs here because it uses the 2023 file (see section 4) ---*/
 * H9: in 2023 the effect of high debt aversion is the same in a probit or
 *     logit as in the lpm.
 * probit with the same fixed effects, average partial effect of high aversion
@@ -283,7 +251,7 @@ restore
 
 
 /*==============================================================================
-    5. EXTENSION
+    4. EXTENSION
     the paper uses only linear probability models with clustered errors.
     each test below checks one assumption behind those estimates.
     main specifications: table 3a column (2) for has_debt (sample s_t3_1)
@@ -597,7 +565,7 @@ esttab e5_female_hd e5_larger_hd e5_female_ab e5_larger_ab ///
 
 
 /*==============================================================================
-    6. KEY NUMBERS FOR THE REPORT
+    5. KEY NUMBERS FOR THE REPORT
 ==============================================================================*/
 
 file open kn using "output/key_numbers.csv", write replace
@@ -622,7 +590,7 @@ file close kn
 
 
 /*==============================================================================
-    7. FIGURES FOR THE REPORT
+    6. FIGURES FOR THE REPORT
 ==============================================================================*/
 
 /*--- Figure 1: share of firms with debt at each debt aversion score ---*/
@@ -630,7 +598,7 @@ graph bar (mean) has_debt if !missing(debt_aversion), over(debt_aversion) ///
     ytitle("Share of firms with debt") ///
     b1title("Debt aversion score (0 to 10)") ///
     title("Debt use by debt aversion score") ///
-    note("Source: Paaso, Pursiainen and Torstila (2025) survey, 2020. N = 899.")
+    note("Source: Paaso, Pursiainen and Torstila (2026) survey, 2020. N = 899.")
 graph export "output/fig1_debt_by_score.png", replace width(1600)
 
 /*--- Figure 2: effect of each score relative to score 0 (extension E3) ---*/
@@ -713,14 +681,13 @@ display "done. tables are in output/, the log is output/paaso_replication_output
     - "file data/raw/paaso/cleaned_survey.dta not found": stata is not in the
       project folder. use cd "path to the project folder" first.
     - "command esttab is unrecognized": run  ssc install estout  once.
-    - "program mark_sample already defined": run the whole file from the top
-      (the capture program drop line clears it).
     - "variable phat_has_debt already defined": run the whole file from the
       top, since -clear all- resets the data.
     - probit or logit may note that some dummies "predict failure perfectly"
       and drop those firms. that is expected with many category dummies;
       the N in ext1_probit_logit.csv shows how many firms remain.
-    - N in the fixed effects columns is 884, the paper reports 883; the
-      coefficients match to three decimals. reghdfe and -reg- with dummies
-      can differ by one observation in how singletons are found.
+    - N in the 2020 fixed effects columns is 884, the paper reports 883; the
+      coefficients match to three decimals. in 2023 -reg- keeps a firm that is
+      the only one in its category, which the paper's command drops, so N can
+      be one or two firms above the paper's.
 ==============================================================================*/
